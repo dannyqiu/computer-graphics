@@ -38,6 +38,7 @@
 *.png
 *.gif
 *.jpg
+*.bmp
 
 # Text Backup Files #
 *.s[a-w][a-z]

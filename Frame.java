@@ -357,12 +357,15 @@ public class Frame {
             extension = filename.substring(filename.lastIndexOf('.'), filename.length());
             filename = filename.substring(0, filename.lastIndexOf('.'));
         }
-        String ppmFile = filename + ".ppm";
-        savePpm(ppmFile);
-        if (filename.indexOf('.') == -1) {
+        else {
             extension = ".png"; // Adds .png file extension if no file extension given
         }
-        if (!extension.equals(".ppm")) {
+        if (extension.equals(".ppm")) {
+            savePpm(filename + ".ppm");
+        }
+        else {
+            String ppmFile = filename + "_TEMP.ppm";
+            savePpm(ppmFile);
             filename += extension;
             try {
                 System.out.println("Converting " + ppmFile + " to " + filename);
