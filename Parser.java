@@ -5,10 +5,16 @@ The file follows the following format:
     Every command is a single character that takes up a line
     Any command that requires arguments must have those arguments in the second line.
     The commands are as follows:
-        c: initialize the frame to the specified size
+        f: initialize the frame to the specified size
             takes 2 arguments (width, height)
         l: add a line to the edge matrix
             takes 6 arguemnts (x0, y0, z0, x1, y1, z1)
+        c: add a circle to the edge matrix
+            takes 3 arguments (cx, cy, r)
+        h: add a hermite curve to the edge matrix
+            takes 8 arguments (x0, y0, x1, y1, x2, y2, x3, y3)
+        b: add a bezier curve to the edge matrix
+            takes 8 arguments (x0, y0, x1, y1, x2, y2, x3, y3)
         i: set the transform matrix to the identity matrix
         s: create a scale matrix, then multiply the transform matrix by the scale matrix
             takes 3 arguments (sx, sy, sz)
@@ -54,15 +60,29 @@ public class Parser {
         String line = getNextLine(in);
         double[] args;
         boolean done = false;
+        int lineNumber = 0;
         while (line != null && !done) {
+            lineNumber++;
             switch (line.charAt(0)) {
-                case 'c':
+                case 'f':
                     args = parseArgs(getNextLine(in));
                     frame = new Frame((int) args[0], (int) args[1]);
                     break;
                 case 'l':
                     args = parseArgs(getNextLine(in));
                     em.addEdge(args[0], args[1], args[2], args[3], args[4], args[5]);
+                    break;
+                case 'c':
+                    args = parseArgs(getNextLine(in));
+                    em.addCircle(args[0], args[1], args[2]);
+                    break;
+                case 'h':
+                    args = parseArgs(getNextLine(in));
+                    em.addCurve(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], EdgeMatrix.CurveType.HERMITE);
+                    break;
+                case 'b':
+                    args = parseArgs(getNextLine(in));
+                    em.addCurve(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], EdgeMatrix.CurveType.BEZIER);
                     break;
                 case 'i':
                     tfm.makeIdentity();
@@ -100,10 +120,12 @@ public class Parser {
                     frame.clearFrame();
                     frame.drawLines(em, new Color(255, 255, 255));
                     frame.saveImage(filename);
-                    //frame.savePpm(filename);
                     break;
                 case 'q':
                     done = true;
+                    break;
+                default:
+                    System.out.println("Unrecognized command on line " + lineNumber + ": " + line);
                     break;
             }
             line = getNextLine(in);

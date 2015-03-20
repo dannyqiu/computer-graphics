@@ -4,3 +4,5 @@ all:
 
 clean:
 	rm -f pic*
+	rm -f *.png
+	rm -f *.class
