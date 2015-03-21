@@ -14,12 +14,12 @@ public class EdgeMatrix extends Matrix {
     /**
      * Adds an edge to the matrix given x, y, z coordinates for the two points
      * that define the edge line
-     * @param x0 x-coordinate of starting point 
-     * @param y0 y-coordinate of starting point 
-     * @param z0 z-coordinate of starting point 
-     * @param x1 x-coordinate of ending point 
-     * @param y1 y-coordinate of ending point 
-     * @param z1 z-coordinate of ending point 
+     * @param x0 x-coordinate of starting point
+     * @param y0 y-coordinate of starting point
+     * @param z0 z-coordinate of starting point
+     * @param x1 x-coordinate of ending point
+     * @param y1 y-coordinate of ending point
+     * @param z1 z-coordinate of ending point
      */
     public void addEdge(double x0, double y0, double z0,
                         double x1, double y1, double z1) {
