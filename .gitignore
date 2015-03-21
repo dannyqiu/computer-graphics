@@ -27,13 +27,13 @@
 *.x86_64
 *.hex
 
-#python
+# Python
 *.pyc
 
-#java
+# Java
 *.class
 
-#images
+# Images
 *.ppm
 *.png
 *.gif
