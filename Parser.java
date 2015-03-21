@@ -118,7 +118,8 @@ public class Parser {
                 case 'g':
                     String filename = stringStrip(getNextLine(in));
                     frame.clearFrame();
-                    frame.drawLines(em, new Color(255, 255, 255));
+                    Random r = new Random();
+                    frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
                     frame.saveImage(filename);
                     break;
                 case 'q':
