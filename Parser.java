@@ -15,6 +15,14 @@ The file follows the following format:
             takes 8 arguments (x0, y0, x1, y1, x2, y2, x3, y3)
         b: add a bezier curve to the edge matrix
             takes 8 arguments (x0, y0, x1, y1, x2, y2, x3, y3)
+        p: adds a rectangular prism (box) to the edge matrix
+            takes 6 parameters (x, y, z, width, height, depth)
+        m: adds a sphere (munchkin) to the edge matrix
+            takes 4 parameters (x, y, z, radius)
+        d: adds a torus (doughnut) to the edge matrix
+            takes 5 parameters (x, y, z, radius1, radius2)
+                radius1 is the radius of the circle that makes up the torus
+                radius2 is the full radius of the torus (the translation factor)
         i: set the transform matrix to the identity matrix
         s: create a scale matrix, then multiply the transform matrix by the scale matrix
             takes 3 arguments (sx, sy, sz)
@@ -29,6 +37,7 @@ The file follows the following format:
         a: apply the current transformation matrix to the edge matrix
         g: draw the lines of the edge matrix to the Frame save the Frame to a file
             takes 1 argument (file name)
+        w: clears the edge matrix of all points
         q: end parsing
 
 =================================*/
@@ -60,76 +69,96 @@ public class Parser {
         String line = getNextLine(in);
         double[] args;
         boolean done = false;
-        int lineNumber = 0;
-        while (line != null && !done) {
-            lineNumber++;
-            switch (line.charAt(0)) {
-                case 'f':
-                    args = parseArgs(getNextLine(in));
-                    frame = new Frame((int) args[0], (int) args[1]);
-                    break;
-                case 'l':
-                    args = parseArgs(getNextLine(in));
-                    em.addEdge(args[0], args[1], args[2], args[3], args[4], args[5]);
-                    break;
-                case 'c':
-                    args = parseArgs(getNextLine(in));
-                    em.addCircle(args[0], args[1], args[2]);
-                    break;
-                case 'h':
-                    args = parseArgs(getNextLine(in));
-                    em.addCurve(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], EdgeMatrix.CurveType.HERMITE);
-                    break;
-                case 'b':
-                    args = parseArgs(getNextLine(in));
-                    em.addCurve(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], EdgeMatrix.CurveType.BEZIER);
-                    break;
-                case 'i':
-                    tfm.makeIdentity();
-                    break;
-                case 's':
-                    args = parseArgs(getNextLine(in));
-                    tfmTemp.makeScale(args[0], args[1], args[2]);
-                    tfm.matrixMultiply(tfmTemp);
-                    break;
-                case 't':
-                    args = parseArgs(getNextLine(in));
-                    tfmTemp.makeTranslate(args[0], args[1], args[2]);
-                    tfm.matrixMultiply(tfmTemp);
-                    break;
-                case 'x':
-                    args = parseArgs(getNextLine(in));
-                    tfmTemp.makeRotX(args[0]);
-                    tfm.matrixMultiply(tfmTemp);
-                    break;
-                case 'y':
-                    args = parseArgs(getNextLine(in));
-                    tfmTemp.makeRotY(args[0]);
-                    tfm.matrixMultiply(tfmTemp);
-                    break;
-                case 'z':
-                    args = parseArgs(getNextLine(in));
-                    tfmTemp.makeRotZ(args[0]);
-                    tfm.matrixMultiply(tfmTemp);
-                    break;
-                case 'a':
-                    em.matrixMultiply(tfm.transpose());
-                    break;
-                case 'g':
-                    String filename = stringStrip(getNextLine(in));
-                    frame.clearFrame();
-                    Random r = new Random();
-                    frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
-                    frame.saveImage(filename);
-                    break;
-                case 'q':
-                    done = true;
-                    break;
-                default:
-                    System.out.println("Unrecognized command on line " + lineNumber + ": " + line);
-                    break;
+        int lineNumber = 1;
+        try {
+            while (line != null && !done) {
+                lineNumber++;
+                switch (line.charAt(0)) {
+                    case 'f':
+                        args = parseArgs(getNextLine(in));
+                        frame = new Frame((int) args[0], (int) args[1]);
+                        break;
+                    case 'l':
+                        args = parseArgs(getNextLine(in));
+                        em.addEdge(args[0], args[1], args[2], args[3], args[4], args[5]);
+                        break;
+                    case 'c':
+                        args = parseArgs(getNextLine(in));
+                        em.addCircle(args[0], args[1], args[2]);
+                        break;
+                    case 'h':
+                        args = parseArgs(getNextLine(in));
+                        em.addCurve(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], EdgeMatrix.CurveType.HERMITE);
+                        break;
+                    case 'b':
+                        args = parseArgs(getNextLine(in));
+                        em.addCurve(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], EdgeMatrix.CurveType.BEZIER);
+                        break;
+                    case 'p':
+                        args = parseArgs(getNextLine(in));
+                        em.addPrism(args[0], args[1], args[2], args[3], args[4], args[5]);
+                        break;
+                    case 'm':
+                        args = parseArgs(getNextLine(in));
+                        em.addSphere(args[0], args[1], args[2], args[3]);
+                        break;
+                    case 'd':
+                        args = parseArgs(getNextLine(in));
+                        em.addTorus(args[0], args[1], args[2], args[3], args[4]);
+                        break;
+                    case 'i':
+                        tfm.makeIdentity();
+                        break;
+                    case 's':
+                        args = parseArgs(getNextLine(in));
+                        tfmTemp.makeScale(args[0], args[1], args[2]);
+                        tfm.matrixMultiply(tfmTemp);
+                        break;
+                    case 't':
+                        args = parseArgs(getNextLine(in));
+                        tfmTemp.makeTranslate(args[0], args[1], args[2]);
+                        tfm.matrixMultiply(tfmTemp);
+                        break;
+                    case 'x':
+                        args = parseArgs(getNextLine(in));
+                        tfmTemp.makeRotX(args[0]);
+                        tfm.matrixMultiply(tfmTemp);
+                        break;
+                    case 'y':
+                        args = parseArgs(getNextLine(in));
+                        tfmTemp.makeRotY(args[0]);
+                        tfm.matrixMultiply(tfmTemp);
+                        break;
+                    case 'z':
+                        args = parseArgs(getNextLine(in));
+                        tfmTemp.makeRotZ(args[0]);
+                        tfm.matrixMultiply(tfmTemp);
+                        break;
+                    case 'a':
+                        em.matrixMultiply(tfm.transpose());
+                        break;
+                    case 'g':
+                        String filename = stringStrip(getNextLine(in));
+                        frame.clearFrame();
+                        Random r = new Random();
+                        frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                        frame.saveImage(filename);
+                        break;
+                    case 'q':
+                        done = true;
+                        break;
+                    case 'w':
+                        em.clear();
+                        break;
+                    default:
+                        System.out.println("Unrecognized command on line " + lineNumber + ": " + line);
+                        break;
+                }
+                line = getNextLine(in);
             }
-            line = getNextLine(in);
+        }
+        catch (Exception e) {
+            System.out.println("Error parsing script file on line " + lineNumber + ": " + line);
         }
     }
 
