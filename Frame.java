@@ -127,6 +127,7 @@ public class Frame {
      * @param c  color of the line to be drawn
      */
     public void drawLine(int x0, int y0, int x1, int y1, Color c) {
+        plot(x0, y0, c);
         if (x0 > x1) { // Swap coordinates so our loop goes from left to right
             int temp;
             temp = x0;
@@ -226,6 +227,7 @@ public class Frame {
      * @param c  color of the line to be drawn
      */
     public void drawLineCartesian(int x0, int y0, int x1, int y1, Color c) {
+        plotCartesian(x0, y0, c);
         if (x0 > x1) { // Swap coordinates so our loop goes from left to right
             int temp;
             temp = x0;
