@@ -35,7 +35,8 @@ The file follows the following format:
         z: create an z-axis rotation matrix, then multiply the transform matrix by the rotation matrix
             takes 1 argument (theta)
         a: apply the current transformation matrix to the edge matrix
-        g: draw the lines of the edge matrix to the Frame save the Frame to a file
+        v: views the current frame
+        g: draw the lines of the edge matrix to the frame save the frame to a file
             takes 1 argument (file name)
         w: clears the edge matrix of all points
         q: end parsing
@@ -52,12 +53,16 @@ public class Parser {
     private EdgeMatrix em; // Master edge matrix
     private Frame frame; // Frame used for drawing and saving
 
+    int lineNumber; // Current line number when parsing the file
+    Random r = new Random();
+
     public Parser() {
 	frame = new Frame();
         tfm = new EdgeMatrix(4, 4);
         tfmTemp = new EdgeMatrix(4, 4);
 	em = new EdgeMatrix();
 	tfm.makeIdentity();
+        lineNumber = 1;
     }
 
     /**
@@ -69,11 +74,12 @@ public class Parser {
         String line = getNextLine(in);
         double[] args;
         boolean done = false;
-        int lineNumber = 1;
         try {
             while (line != null && !done) {
                 lineNumber++;
                 switch (line.charAt(0)) {
+                    case '#': // Skips the comment
+                        break;
                     case 'f':
                         args = parseArgs(getNextLine(in));
                         frame = new Frame((int) args[0], (int) args[1]);
@@ -100,11 +106,21 @@ public class Parser {
                         break;
                     case 'm':
                         args = parseArgs(getNextLine(in));
-                        em.addSphere(args[0], args[1], args[2], args[3]);
+                        if (args.length == 3) { // z coordinate is not specified
+                            em.addSphere(args[0], args[1], 0, args[2]);
+                        }
+                        else {
+                            em.addSphere(args[0], args[1], args[2], args[3]);
+                        }
                         break;
                     case 'd':
                         args = parseArgs(getNextLine(in));
-                        em.addTorus(args[0], args[1], args[2], args[3], args[4]);
+                        if (args.length == 4) { // z coordinate is not specified
+                            em.addTorus(args[0], args[1], 0, args[2], args[3]);
+                        }
+                        else {
+                            em.addTorus(args[0], args[1], args[2], args[3], args[4]);
+                        }
                         break;
                     case 'i':
                         tfm.makeIdentity();
@@ -112,37 +128,41 @@ public class Parser {
                     case 's':
                         args = parseArgs(getNextLine(in));
                         tfmTemp.makeScale(args[0], args[1], args[2]);
-                        tfm.matrixMultiply(tfmTemp);
+                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiple it by the transpose because of the way our points are stored
                         break;
                     case 't':
                         args = parseArgs(getNextLine(in));
                         tfmTemp.makeTranslate(args[0], args[1], args[2]);
-                        tfm.matrixMultiply(tfmTemp);
+                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiple it by the transpose because of the way our points are stored
                         break;
                     case 'x':
                         args = parseArgs(getNextLine(in));
                         tfmTemp.makeRotX(args[0]);
-                        tfm.matrixMultiply(tfmTemp);
+                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiple it by the transpose because of the way our points are stored
                         break;
                     case 'y':
                         args = parseArgs(getNextLine(in));
                         tfmTemp.makeRotY(args[0]);
-                        tfm.matrixMultiply(tfmTemp);
+                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiple it by the transpose because of the way our points are stored
                         break;
                     case 'z':
                         args = parseArgs(getNextLine(in));
                         tfmTemp.makeRotZ(args[0]);
-                        tfm.matrixMultiply(tfmTemp);
+                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiple it by the transpose because of the way our points are stored
                         break;
                     case 'a':
-                        em.matrixMultiply(tfm.transpose());
+                        em.matrixMultiply(tfm);
                         break;
                     case 'g':
                         String filename = stringStrip(getNextLine(in));
                         frame.clearFrame();
-                        Random r = new Random();
                         frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
                         frame.saveImage(filename);
+                        break;
+                    case 'v':
+                        frame.clearFrame();
+                        frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                        frame.viewFrame();
                         break;
                     case 'q':
                         done = true;
@@ -159,6 +179,7 @@ public class Parser {
         }
         catch (Exception e) {
             System.out.println("Error parsing script file on line " + lineNumber + ": " + line);
+            e.printStackTrace();
         }
     }
 
@@ -191,6 +212,7 @@ public class Parser {
     }
 
     private double[] parseArgs(String line) {
+        lineNumber++;
         line = stringStrip(line);
         String[] args = line.split(" ");
         double[] doubleArgs = new double[args.length];
