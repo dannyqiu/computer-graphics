@@ -4,11 +4,8 @@ all: compile
 compile:
 	javac -Xlint:unchecked -Xdiags:verbose *.java
 
-generate: compile
-	java Main
-	java Main awesome
-
 clean:
 	rm -f pic*
 	rm -f *.png
+	rm -f *.ppm
 	rm -f *.class
