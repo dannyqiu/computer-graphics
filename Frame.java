@@ -325,6 +325,28 @@ public class Frame {
     }
 
     /**
+     * Pauses execution of the program and views the current frame
+     */
+    public void viewFrame() {
+        String filename = "temp-" + System.currentTimeMillis() + ".ppm";
+        savePpm(filename);
+        try {
+            ProcessBuilder pb = new ProcessBuilder("display", filename).inheritIO();
+            Process p = pb.start();
+            try {
+                p.waitFor(); // Keeps frame in view
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            File file = new File(filename);
+            file.delete();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Saves the frame into a PPM file which can be viewed later using a
      * program such as ImageMagick
      * @param filename  name of the file to save image to
