@@ -9,12 +9,12 @@ The file follows the following format:
             takes 2 arguments (width, height)
         l: add a line to the edge matrix
             takes 6 arguemnts (x0, y0, z0, x1, y1, z1)
-        c: add a circle to the edge matrix
-            takes 3 arguments (cx, cy, r)
         h: add a hermite curve to the edge matrix
             takes 8 arguments (x0, y0, x1, y1, x2, y2, x3, y3)
         b: add a bezier curve to the edge matrix
             takes 8 arguments (x0, y0, x1, y1, x2, y2, x3, y3)
+        c: add a circle to the edge matrix
+            takes 3 arguments (cx, cy, r)
         p: adds a rectangular prism (box) to the edge matrix
             takes 6 parameters (x, y, z, width, height, depth)
         m: adds a sphere (munchkin) to the edge matrix
@@ -35,6 +35,8 @@ The file follows the following format:
         z: create an z-axis rotation matrix, then multiply the transform matrix by the rotation matrix
             takes 1 argument (theta)
         a: apply the current transformation matrix to the edge matrix
+        j: sets the drawing mode to line drawing (default)
+        k: sets the drawing mode to polygon drawing
         v: views the current frame
         g: draw the lines of the edge matrix to the frame save the frame to a file
             takes 1 argument (file name)
@@ -46,12 +48,17 @@ The file follows the following format:
 import java.io.*;
 import java.util.*;
 
+enum DrawingMode {
+    LINE, POLYGON
+}
+
 public class Parser {
 
     private EdgeMatrix tfm; // Master transform matrix
     private EdgeMatrix tfmTemp; // Temporary transform matrix to multiply to the master
     private EdgeMatrix em; // Master edge matrix
     private Frame frame; // Frame used for drawing and saving
+    DrawingMode drawingMode = DrawingMode.LINE; // Mode of drawing (line or polygon)
 
     int lineNumber; // Current line number when parsing the file
     Random r = new Random();
@@ -133,35 +140,51 @@ public class Parser {
                     case 't':
                         args = parseArgs(getNextLine(in));
                         tfmTemp.makeTranslate(args[0], args[1], args[2]);
-                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiple it by the transpose because of the way our points are stored
+                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiply it by the transpose because of the way our points are stored
                         break;
                     case 'x':
                         args = parseArgs(getNextLine(in));
                         tfmTemp.makeRotX(args[0]);
-                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiple it by the transpose because of the way our points are stored
+                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiply it by the transpose because of the way our points are stored
                         break;
                     case 'y':
                         args = parseArgs(getNextLine(in));
                         tfmTemp.makeRotY(args[0]);
-                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiple it by the transpose because of the way our points are stored
+                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiply it by the transpose because of the way our points are stored
                         break;
                     case 'z':
                         args = parseArgs(getNextLine(in));
                         tfmTemp.makeRotZ(args[0]);
-                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiple it by the transpose because of the way our points are stored
+                        tfm.matrixMultiply(tfmTemp.transpose()); // We need to multiply it by the transpose because of the way our points are stored
                         break;
                     case 'a':
                         em.matrixMultiply(tfm);
                         break;
+                    case 'j':
+                        drawingMode = DrawingMode.LINE;
+                        break;
+                    case 'k':
+                        drawingMode = DrawingMode.POLYGON;
+                        break;
                     case 'g':
                         String filename = stringStrip(getNextLine(in));
                         frame.clearFrame();
-                        frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                        if (drawingMode == DrawingMode.POLYGON) {
+                            frame.drawPolygons(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                        }
+                        else {
+                            frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                        }
                         frame.saveImage(filename);
                         break;
                     case 'v':
                         frame.clearFrame();
-                        frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                        if (drawingMode == DrawingMode.POLYGON) {
+                            frame.drawPolygons(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                        }
+                        else {
+                            frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                        }
                         frame.viewFrame();
                         break;
                     case 'q':

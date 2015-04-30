@@ -118,6 +118,27 @@ public class Frame {
     }
 
     /**
+     * Goes through the given matrix and interprets every set of 3 points as
+     * the vertices of a triangle
+     * @param matrix matrix containing the points to draw polygons
+     * @param c      color of the polygons to be drawn
+     */
+    public void drawPolygons(Matrix matrix, Color c) {
+        ArrayList<double[]> m = matrix.getMatrix();
+        if (matrix.getRows() >= 3) {
+            for (int i=0; i<matrix.getRows()-2; i+=3) {
+                double[] p0 = m.get(i);
+                double[] p1 = m.get(i+1);
+                double[] p2 = m.get(i+2);
+                System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
+                drawLine((int) p0[0], (int) p0[1], (int) p1[0], (int) p1[1], c);
+                drawLine((int) p1[0], (int) p1[1], (int) p2[0], (int) p2[1], c);
+                drawLine((int) p2[0], (int) p2[1], (int) p0[0], (int) p0[1], c);
+            }
+        }
+    }
+
+    /**
      * Draws a line between the points with given coordinates using the
      * given color. Origin is at the bottom left
      * @param x0 x-coordinate of the starting point

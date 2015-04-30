@@ -212,14 +212,48 @@ public class EdgeMatrix extends Matrix {
         double x1 = x + width;
         double y1 = y + height;
         double z1 = z - depth;
-        addEdge(x, y, z, x, y, z);
-        addEdge(x1, y, z, x1, y, z);
-        addEdge(x, y1, z, x, y1, z);
-        addEdge(x, y, z1, x, y, z1);
-        addEdge(x1, y1, z, x1, y1, z);
-        addEdge(x1, y, z1, x1, y, z1);
-        addEdge(x, y1, z1, x, y1, z1);
-        addEdge(x1, y1, z1, x1, y1, z1);
+        // Front side
+        addPolygon(x, y1, z,
+                   x, y, z,
+                   x1, y, z);
+        addPolygon(x, y1, z,
+                   x1, y, z,
+                   x1, y1, z);
+        // Back side
+        addPolygon(x1, y1, z1,
+                   x1, y, z1,
+                   x, y, z1);
+        addPolygon(x1, y1, z1,
+                   x, y, z1,
+                   x, y1, z1);
+        // Right side
+        addPolygon(x1, y1, z,
+                   x1, y, z,
+                   x1, y, z1);
+        addPolygon(x1, y1, z,
+                   x1, y, z1,
+                   x1, y1, z1);
+        // Left side
+        addPolygon(x, y1, z1,
+                   x, y, z1,
+                   x, y, z);
+        addPolygon(x, y1, z1,
+                   x, y, z,
+                   x, y1, z);
+        // Top side
+        addPolygon(x, y1, z1,
+                   x, y1, z,
+                   x1, y1, z);
+        addPolygon(x, y1, z1,
+                   x1, y1, z,
+                   x1, y1, z1);
+        // Back side
+        addPolygon(x1, y, z1,
+                   x1, y, z,
+                   x, y, z);
+        addPolygon(x1, y, z1,
+                   x, y, z,
+                   x, y, z1);
     }
 
     /**
