@@ -4,7 +4,7 @@ import java.io.*;
 public class EdgeMatrix extends Matrix {
 
     private static double STEP_SIZE = 1.0/1000;
-    private static double CIRCULAR_STEP_SIZE = 1.0/100;
+    private static double CIRCULAR_STEP_SIZE = 1.0/20;
 
     public EdgeMatrix() {
         super(0, 4);
@@ -12,6 +12,17 @@ public class EdgeMatrix extends Matrix {
 
     public EdgeMatrix(int _rows, int _cols) {
         super(_rows, _cols);
+    }
+
+    /**
+     * Adds a point to the matrix given x, y, z coordinates
+     * @param x x-coordinate of point
+     * @param y y-coordinate of point
+     * @param z z-coordinate of point
+     */
+    public void addPoint(double x, double y, double z) {
+        double[] p = {x, y, z, 1.0};
+        super.addRow(p);
     }
 
     /**
@@ -31,14 +42,15 @@ public class EdgeMatrix extends Matrix {
     }
 
     /**
-     * Adds a point to the matrix given x, y, z coordinates
-     * @param x x-coordinate of point
-     * @param y y-coordinate of point
-     * @param z z-coordinate of point
+     * Adds the vertices (x0, y0, z0), (x1, y1, z1), and (x2, y2, z2) to the
+     * polygon matrix. They define a single triangular surface
      */
-    public void addPoint(double x, double y, double z) {
-        double[] p = {x, y, z, 1.0};
-        super.addRow(p);
+    public void addPolygon(double x0, double y0, double z0,
+                           double x1, double y1, double z1,
+                           double x2, double y2, double z2) {
+        addPoint(x0, y0, z0);
+        addPoint(x1, y1, z1);
+        addPoint(x2, y2, z2);
     }
 
     /**
@@ -49,7 +61,7 @@ public class EdgeMatrix extends Matrix {
      * @param r        radius of the circle
      */
     public void addCircle(double centerX, double centerY, double r) {
-        addCircle(centerX, centerY, r, 1.0/5000);
+        addCircle(centerX, centerY, r, 1.0/(r*50));
     }
 
     /**
@@ -185,8 +197,9 @@ public class EdgeMatrix extends Matrix {
     }
 
     /**
-     * Adds a rectangular prism to the edge matrix given coordinates that
-     * specify the upper-left-front corner of the prism and its dimensions
+     * Adds the points for a rectangular prism to the edge matrix given
+     * coordinates that specify the upper-left-front corner of the prism
+     * and its dimensions
      * @param x      x-coordinate of upper-left-front corner
      * @param y      y-coordinate of upper-left-front corner
      * @param z      z-coordinate of upper-left-front corner
@@ -196,61 +209,61 @@ public class EdgeMatrix extends Matrix {
      */
     public void addPrism(double x, double y, double z,
                          double width, double height, double depth) {
-        addEdge(x, y, z, x+width, y, z);
-        addEdge(x, y, z, x, y-height, z);
-        addEdge(x, y-height, z, x+width, y-height, z);
-        addEdge(x+width, y, z, x+width, y-height, z);
-        addEdge(x, y, z, x, y, z-depth);
-        addEdge(x+width, y, z, x+width, y, z-depth);
-        addEdge(x, y-height, z, x, y-height, z-depth);
-        addEdge(x+width, y-height, z, x+width, y-height, z-depth);
-        addEdge(x, y, z-depth, x+width, y, z-depth);
-        addEdge(x, y, z-depth, x, y-height, z-depth);
-        addEdge(x, y-height, z-depth, x+width, y-height, z-depth);
-        addEdge(x+width, y, z-depth, x+width, y-height, z-depth);
+        double x1 = x + width;
+        double y1 = y + height;
+        double z1 = z - depth;
+        addEdge(x, y, z, x, y, z);
+        addEdge(x1, y, z, x1, y, z);
+        addEdge(x, y1, z, x, y1, z);
+        addEdge(x, y, z1, x, y, z1);
+        addEdge(x1, y1, z, x1, y1, z);
+        addEdge(x1, y, z1, x1, y, z1);
+        addEdge(x, y1, z1, x, y1, z1);
+        addEdge(x1, y1, z1, x1, y1, z1);
     }
 
     /**
      * Adds a sphere to the edge matrix given coordinates that specify
      * the center its radius
-     * @param x x-coordinate of the center
-     * @param y y-coordinate of the center
-     * @param z z-coordinate of the center
+     * @param cx x-coordinate of the center
+     * @param cy y-coordinate of the center
+     * @param cz z-coordinate of the center
      * @param r radius of the sphere
      * @param stepSize the size of the step to take
      */
-    public void addSphere(double x, double y, double z, double r) {
-        addSphere(x, y, z, r, CIRCULAR_STEP_SIZE);
+    public void addSphere(double cx, double cy, double cz, double r) {
+        EdgeMatrix points = new EdgeMatrix();
+        int index;
+        int numSteps = (int) (1 / CIRCULAR_STEP_SIZE) + 1;
+        int latStop = numSteps;
+        int longStop = numSteps;
+        points.generateSphere(cx, cy, cz, r, CIRCULAR_STEP_SIZE);
+        for (int lat=0; lat<latStop; lat++) {
+            for (int longt=0; longt<longStop; longt++) {
+                index = lat * numSteps + longt;
+                addEdge(points.get(index, 0), points.get(index, 1), points.get(index, 2),
+                        points.get(index, 0), points.get(index, 1), points.get(index, 2));
+            }
+        }
     }
 
     /**
-     * Adds a sphere to the edge matrix given coordinates that specify
-     * the center and the radius
-     * @param x x-coordinate of the center
-     * @param y y-coordinate of the center
-     * @param z z-coordinate of the center
+     * Generates a sphere's points in the edge matrix given coordinates
+     * that specify the center and the radius
+     * @param cx x-coordinate of the center
+     * @param cy y-coordinate of the center
+     * @param cz z-coordinate of the center
      * @param r radius of the sphere
      * @param stepSize the size of the step to take
      */
-    public void addSphere(double x, double y, double z, double r, double stepSize) {
-        double prevX = x+r; // rcos(0)
-        double prevY = y;   // rsin(0)cos(0)
-        double prevZ = z;   // rsin(0)sin(0)
-        for (double t=0; t<1; t+=stepSize) { // theta
-            double theta = Math.PI * t;
-            double rCosTheta = r * Math.cos(2 * theta);
-            double rSinTheta = r * Math.sin(2 * theta);
-            for (double s=0; s<1; s+=stepSize) { // phi
-                double phi = Math.PI * s;
-                double cosPhi = Math.cos(phi);
-                double sinPhi = Math.sin(phi);
-                double nextX = x + rCosTheta;
-                double nextY = y + rSinTheta * cosPhi;
-                double nextZ = z + rSinTheta * sinPhi;
-                addEdge(prevX, prevY, prevZ, prevX, prevY, prevZ);
-                prevX = nextX;
-                prevY = nextY;
-                prevZ = nextZ;
+    public void generateSphere(double cx, double cy, double cz, double r, double stepSize) {
+        double x, y, z;
+        for (double rotation=0; rotation<1+stepSize; rotation+=stepSize) { // theta
+            for (double circle=0; circle<1+stepSize; circle+=stepSize) { // phi
+                x = cx + r * Math.cos(Math.PI * circle);
+                y = cy + r * Math.sin(Math.PI * circle) * Math.cos(2 * Math.PI * rotation);
+                z = cz + r * Math.sin(Math.PI * circle) * Math.sin(2 * Math.PI * rotation);
+                addPoint(x, y, z);
             }
         }
     }
@@ -258,45 +271,48 @@ public class EdgeMatrix extends Matrix {
     /**
      * Adds a torus to the edge matrix given coordinates that specify
      * the center, the circle radius, and the torus radius
-     * @param x x-coordinate of the center
-     * @param y y-coordinate of the center
-     * @param z z-coordinate of the center
+     * @param cx x-coordinate of the center
+     * @param cy y-coordinate of the center
+     * @param cz z-coordinate of the center
      * @param circleRadius radius of the circle being rotated
      * @param torusRadius  radius of the rotation of circle
      */
-    public void addTorus(double x, double y, double z,
+    public void addTorus(double cx, double cy, double cz,
                          double circleRadius, double torusRadius) {
-        addTorus(x, y, z, circleRadius, torusRadius, CIRCULAR_STEP_SIZE);
+        EdgeMatrix points = new EdgeMatrix();
+        int index;
+        int numSteps = (int) (1 / CIRCULAR_STEP_SIZE) + 1;
+        int latStop = numSteps;
+        int longStop = numSteps;
+        points.generateTorus(cx, cy, cz, circleRadius, torusRadius, CIRCULAR_STEP_SIZE);
+        for (int lat=0; lat<latStop; lat++) {
+            for (int longt=0; longt<longStop; longt++) {
+                index = lat * numSteps + longt;
+                addEdge(points.get(index, 0), points.get(index, 1), points.get(index, 2),
+                        points.get(index, 0), points.get(index, 1), points.get(index, 2));
+            }
+        }
     }
 
     /**
-     * Adds a torus to the edge matrix given coordinates that specify
-     * the center, the circle radius, and the torus radius
-     * @param x x-coordinate of the center
-     * @param y y-coordinate of the center
-     * @param z z-coordinate of the center
+     * Generate's a torus's points in the edge matrix given coordinates
+     * that specify the center, the circle radius, and the torus radius
+     * @param cx x-coordinate of the center
+     * @param cy y-coordinate of the center
+     * @param cz z-coordinate of the center
      * @param circleRadius radius of the circle being rotated
      * @param torusRadius  radius of the rotation of circle
      * @param stepSize the size of the step to take
      */
-    public void addTorus(double x, double y, double z,
-                         double circleRadius, double torusRadius, double stepSize) {
-        double prevX = x + circleRadius + torusRadius; // (cos(0)) * (rcos(0) + R)
-        double prevY = y;                              // rsin(0)
-        double prevZ = z;                              // (-sin(0)) * (rcos(0) + R)
-        for (double t=0; t<1; t+=stepSize) {
-            double theta = Math.PI * t;
-            double crCosTheta = circleRadius * Math.cos(2 * theta);
-            double crSinTheta = circleRadius * Math.sin(2 * theta);
-            for (double s=0; s<1; s+=stepSize) {
-                double phi = Math.PI * s;
-                double nextX = x + Math.cos(2 * phi) * (crCosTheta + torusRadius);
-                double nextY = y + crSinTheta;
-                double nextZ = z - Math.sin(2 * phi) * (crCosTheta + torusRadius);
-                addEdge(prevX, prevY, prevZ, prevX, prevY, prevZ);
-                prevX = nextX;
-                prevY = nextY;
-                prevZ = nextZ;
+    public void generateTorus(double cx, double cy, double cz,
+                              double circleRadius, double torusRadius, double stepSize) {
+        double x, y, z;
+        for (double rotation=0; rotation<1+stepSize; rotation+=stepSize) { // theta
+            for (double circle=0; circle<1+stepSize; circle+=stepSize) { //phi
+                x = cx + Math.cos(2 * Math.PI * rotation) * (circleRadius * Math.cos(2 * Math.PI * circle) + torusRadius);
+                y = cy + Math.sin(2 * Math.PI * circle) * circleRadius;
+                z = cz + Math.sin(2 * Math.PI * rotation) * (circleRadius * Math.cos(2 * Math.PI * circle) + torusRadius);
+                addPoint(x, y, z);
             }
         }
     }
