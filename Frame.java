@@ -130,11 +130,37 @@ public class Frame {
                 double[] p0 = m.get(i);
                 double[] p1 = m.get(i+1);
                 double[] p2 = m.get(i+2);
-                System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
-                drawLine((int) p0[0], (int) p0[1], (int) p1[0], (int) p1[1], c);
-                drawLine((int) p1[0], (int) p1[1], (int) p2[0], (int) p2[1], c);
-                drawLine((int) p2[0], (int) p2[1], (int) p0[0], (int) p0[1], c);
+                if (isVisible(p0, p1, p2)) {
+                    System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
+                    drawLine((int) p0[0], (int) p0[1], (int) p1[0], (int) p1[1], c);
+                    drawLine((int) p1[0], (int) p1[1], (int) p2[0], (int) p2[1], c);
+                    drawLine((int) p2[0], (int) p2[1], (int) p0[0], (int) p0[1], c);
+                }
             }
+        }
+    }
+
+    /**
+     * Returns true or false depending on whether the face is visible or not
+     * when looking at the face from the front.
+     * Note that the points given must be in counterclockwise order!
+     * @param p0 first vertex
+     * @param p1 second vertex
+     * @param p2 third vertex
+     */
+    private boolean isVisible(double[] p0, double[] p1, double[] p2) {
+        // v1 is the vector from p0 to p1
+        double[] v1 = new double[] {p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2]};
+        // v2 is the vector from p0 to p2
+        double[] v2 = new double[] {p0[0] - p2[0], p0[1] - p2[1], p0[2] - p2[2]};
+        double[] surfaceNormal = GMath.crossProduct(v1, v2);
+        double[] viewVector = new double[] {0, 0, -1};
+        double cosAngle = GMath.dotProduct(surfaceNormal, viewVector) / (GMath.getMagnitude(surfaceNormal) * GMath.getMagnitude(viewVector));
+        if (cosAngle < 0) { // Angle is from 90 to 270 degrees (viewable)
+            return true;
+        }
+        else { // Angle is either less than 0 or greater than 270
+            return false;
         }
     }
 
