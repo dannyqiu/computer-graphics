@@ -4,7 +4,7 @@ import java.io.*;
 public class EdgeMatrix extends Matrix {
 
     private static double STEP_SIZE = 1.0/1000;
-    private static double CIRCULAR_STEP_SIZE = 1.0/20;
+    private static double CIRCULAR_STEP_SIZE = 1.0/18;
 
     public EdgeMatrix() {
         super(0, 4);
@@ -269,14 +269,32 @@ public class EdgeMatrix extends Matrix {
         EdgeMatrix points = new EdgeMatrix();
         int index;
         int numSteps = (int) (1 / CIRCULAR_STEP_SIZE) + 1;
-        int latStop = numSteps;
-        int longStop = numSteps;
+        int latStop = numSteps - 1;
+        int longStop = numSteps - 1;
         points.generateSphere(cx, cy, cz, r, CIRCULAR_STEP_SIZE);
         for (int lat=0; lat<latStop; lat++) {
             for (int longt=0; longt<longStop; longt++) {
                 index = lat * numSteps + longt;
-                addEdge(points.get(index, 0), points.get(index, 1), points.get(index, 2),
-                        points.get(index, 0), points.get(index, 1), points.get(index, 2));
+                if (lat == latStop-1) { // This is referring to the last rotation, so that it connects with the first
+                    addPolygon(points.get(index, 0), points.get(index, 1), points.get(index, 2),
+                               points.get(longt, 0), points.get(longt, 1), points.get(longt, 2),
+                               points.get(longt+1, 0), points.get(longt+1, 1), points.get(longt+1, 2));
+                    if (longt < longStop-1) { // We don't want it to draw the poles again
+                        addPolygon(points.get(longt+1, 0), points.get(longt+1, 1), points.get(longt+1, 2),
+                                   points.get(index+1, 0), points.get(index+1, 1), points.get(index+1, 2 ),
+                                   points.get(index, 0), points.get(index, 1), points.get(index, 2));
+                    }
+                }
+                else {
+                    addPolygon(points.get(index, 0), points.get(index, 1), points.get(index, 2),
+                               points.get(index+numSteps, 0), points.get(index+numSteps, 1), points.get(index+numSteps, 2),
+                               points.get(index+numSteps+1, 0), points.get(index+numSteps+1, 1), points.get(index+numSteps+1, 2));
+                    if (longt < longStop-1) { // We don't want it to draw the poles again
+                        addPolygon(points.get(index+numSteps+1, 0), points.get(index+numSteps+1, 1), points.get(index+numSteps+1, 2),
+                                   points.get(index+1, 0), points.get(index+1, 1), points.get(index+1, 2 ),
+                                   points.get(index, 0), points.get(index, 1), points.get(index, 2));
+                    }
+                }
             }
         }
     }
@@ -316,14 +334,18 @@ public class EdgeMatrix extends Matrix {
         EdgeMatrix points = new EdgeMatrix();
         int index;
         int numSteps = (int) (1 / CIRCULAR_STEP_SIZE) + 1;
-        int latStop = numSteps;
-        int longStop = numSteps;
+        int latStop = numSteps - 1;
+        int longStop = numSteps - 1;
         points.generateTorus(cx, cy, cz, circleRadius, torusRadius, CIRCULAR_STEP_SIZE);
         for (int lat=0; lat<latStop; lat++) {
             for (int longt=0; longt<longStop; longt++) {
                 index = lat * numSteps + longt;
-                addEdge(points.get(index, 0), points.get(index, 1), points.get(index, 2),
-                        points.get(index, 0), points.get(index, 1), points.get(index, 2));
+                addPolygon(points.get(index, 0), points.get(index, 1), points.get(index, 2),
+                           points.get(index+1, 0), points.get(index+1, 1), points.get(index+1, 2),
+                           points.get(index+numSteps, 0), points.get(index+numSteps, 1), points.get(index+numSteps, 2));
+                addPolygon(points.get(index+numSteps+1, 0), points.get(index+numSteps+1, 1), points.get(index+numSteps+1, 2),
+                           points.get(index+numSteps, 0), points.get(index+numSteps, 1), points.get(index+numSteps, 2),
+                           points.get(index+1, 0), points.get(index+1, 1), points.get(index+1, 2));
             }
         }
     }

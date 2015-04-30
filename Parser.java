@@ -69,7 +69,7 @@ public class Parser {
         tfmTemp = new EdgeMatrix(4, 4);
 	em = new EdgeMatrix();
 	tfm.makeIdentity();
-        lineNumber = 1;
+        lineNumber = 0;
     }
 
     /**
@@ -84,6 +84,10 @@ public class Parser {
         try {
             while (line != null && !done) {
                 lineNumber++;
+                if (line.equals("")) {
+                    line = getNextLine(in);
+                    continue;
+                }
                 switch (line.charAt(0)) {
                     case '#': // Skips the comment
                         break;
