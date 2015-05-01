@@ -7,6 +7,7 @@ public class GMath {
      * Returns the dot product given two equal length vectors
      * @param a vector to take the dot product with
      * @param b vector to take the dot product with
+     * @return double representing the dot product of the two given vectors
      */
     public static double dotProduct(double[] a, double[] b) {
         if (a.length != b.length) {
@@ -24,6 +25,7 @@ public class GMath {
      * length of 3 (for each axis - x, y, z)
      * @param a vector to take the cross product with
      * @param b vector to take the cross product with
+     * @return double array representing the cross product of the two given vectors
      */
     public static double[] crossProduct(double[] a, double[] b) {
         if (a.length < 3 || b.length < 3) {
@@ -39,6 +41,7 @@ public class GMath {
     /**
      * Returns the magnitude of the given vector
      * @param a vector to get the magnitude of
+     * @return double representing the magnitude of the vector
      */
     public static double getMagnitude(double[] a) {
         double sum = 0;

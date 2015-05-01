@@ -64,11 +64,11 @@ public class Parser {
     Random r = new Random();
 
     public Parser() {
-	frame = new Frame();
+        frame = new Frame();
         tfm = new EdgeMatrix(4, 4);
         tfmTemp = new EdgeMatrix(4, 4);
-	em = new EdgeMatrix();
-	tfm.makeIdentity();
+        em = new EdgeMatrix();
+        tfm.makeIdentity();
         lineNumber = 0;
     }
 
