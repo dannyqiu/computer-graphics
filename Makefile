@@ -1,11 +1,13 @@
+SOURCE_DIRECTORY=src
+BUILD_DIRECTORY=bin
+IGNORE_EXTENSIONS=png|ppm|class
+
 all: compile
-	java Main script
+	java -cp $(BUILD_DIRECTORY) Main script
 
 compile:
-	javac -Xlint:unchecked -Xdiags:verbose *.java
+	mkdir -p $(BUILD_DIRECTORY)
+	javac -Xlint:unchecked -Xdiags:verbose $(SOURCE_DIRECTORY)/*.java -d $(BUILD_DIRECTORY)
 
 clean:
-	rm -f pic*
-	rm -f *.png
-	rm -f *.ppm
-	rm -f *.class
+	find -E . -regex ".*\.($(IGNORE_EXTENSIONS))" -exec rm {} \;

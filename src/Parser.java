@@ -210,7 +210,11 @@ public class Parser {
         }
     }
 
-    public String getNextLine(BufferedReader in) {
+    /**
+     * @param in BufferedReader object that corresponds to an opened file
+     * @return string for the next line read from the BufferedReader
+     */
+    private String getNextLine(BufferedReader in) {
         try {
             return in.readLine();
         }
@@ -223,7 +227,7 @@ public class Parser {
     /**
      * Goes through the input stream referred to by in, scans it for the commands
      * as shown in the guide above, and performs the required commands
-     * @param in BufferedReader referenced to the opened file
+     * @param filename path of file to read from 
      */
     public void parseFile(String filename) {
         try {
@@ -238,6 +242,11 @@ public class Parser {
         }
     }
 
+    /**
+     * Takes a line of input and returns a double array with space as a delimiter
+     * @param line string to parse arguments from
+     * @return double array of parsed arguments
+     */
     private double[] parseArgs(String line) {
         lineNumber++;
         line = stringStrip(line);
@@ -249,6 +258,11 @@ public class Parser {
         return doubleArgs;
     }
 
+    /**
+     * Strips newlines from a string.
+     * @param line string to strip newlines from
+     * @return stripped string without newlines
+     */
     private String stringStrip(String line) {
         line = line.replace("\n", "").replace("\r", "").trim();
         return line;
