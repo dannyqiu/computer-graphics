@@ -227,7 +227,7 @@ public class Parser {
     /**
      * Goes through the input stream referred to by in, scans it for the commands
      * as shown in the guide above, and performs the required commands
-     * @param filename path of file to read from 
+     * @param filename path of file to read from
      */
     public void parseFile(String filename) {
         try {

@@ -498,7 +498,7 @@ public class EdgeMatrix extends Matrix {
     }
 
     /**
-     * Turns the caling matrix into a bezier coefficient generating matrix
+     * Turns the calling matrix into a bezier coefficient generating matrix
      */
     public void makeBezier() {
         matrix = newMatrix(0,4);
