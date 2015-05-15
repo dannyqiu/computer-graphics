@@ -35,6 +35,10 @@ public class Matrix {
         setMatrix(matrix);
     }
 
+    public Matrix(int _dimensions) {
+        matrix = newMatrix(_dimensions, _dimensions);
+    }
+
     public Matrix(int _rows, int _cols) {
         matrix = newMatrix(_rows, _cols);
         setMatrix(matrix);
@@ -43,7 +47,7 @@ public class Matrix {
     /**
      * Turns the matrix into an identity matrix. Assumes that the matrix is a square
      */
-    public void makeIdentity() {
+    public void identity() {
         if (this.getRows() == this.getCols()) {
             for (int i=0; i<this.getRows(); i++) {
                 for (int j=0; j<this.getCols(); j++) {

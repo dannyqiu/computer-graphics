@@ -68,7 +68,7 @@ public class Parser {
         tfm = new EdgeMatrix(4, 4);
         tfmTemp = new EdgeMatrix(4, 4);
         em = new EdgeMatrix();
-        tfm.makeIdentity();
+        tfm.identity();
         lineNumber = 0;
     }
 
@@ -134,7 +134,7 @@ public class Parser {
                         }
                         break;
                     case 'i':
-                        tfm.makeIdentity();
+                        tfm.identity();
                         break;
                     case 's':
                         args = parseArgs(getNextLine(in));
