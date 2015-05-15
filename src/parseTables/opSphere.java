@@ -12,7 +12,7 @@ public class opSphere extends opShape {
     }
 
     public String toString() {
-        return "Sphere: " + "Center - " + triple(center) + " Radius - " + r + " cs - " + cs + " constants - " + constants;
+        return "Sphere: Center - " + triple(center) + " Radius - " + r + " cs - " + cs + " Constants - " + constants;
     }
 
     public double[] getCenter() {

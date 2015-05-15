@@ -23,4 +23,5 @@ pop
 push
 move -75 -100 0
 box 0 0 0 -40 180 40
+display
 save robot.png

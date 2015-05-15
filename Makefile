@@ -22,4 +22,4 @@ clean:
 	find -E . -regex ".*\.($(CLEAN_EXTENSIONS))" -exec rm {} \;
 
 test:
-	java -cp $(BUILD_DIRECTORY) Main test.mdl
+	java -cp $(BUILD_DIRECTORY) Main robot.mdl

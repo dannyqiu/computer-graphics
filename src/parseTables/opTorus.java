@@ -15,7 +15,7 @@ public class opTorus extends opShape {
     }
 
     public String toString() {
-        return "Torus: " + "Center - " + triple(center) + " R - " + R + " r - " + r + " cs - " + cs + " Contsants - " + constants;
+        return "Torus: Center - " + triple(center) + " R - " + R + " r - " + r + " cs - " + cs + " Constants - " + constants;
     }
 
     public double[] getCenter() {

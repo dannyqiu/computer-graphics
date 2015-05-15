@@ -16,7 +16,7 @@ public class opBox extends opShape {
     }
 
     public String toString() {
-        return "Box: " + "p1 - " + triple(p1) + "p2 - " + triple(p2) + " cs1 - " + cs + " cs2 - " + cs2 + " Contsants - " + constants;
+        return "Box: p1 - " + triple(p1) + " p2 - " + triple(p2) + " cs1 - " + cs + " cs2 - " + cs2 + " Constants - " + constants;
     }
 
     public double[] getP1() {

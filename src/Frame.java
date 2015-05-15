@@ -7,6 +7,7 @@ public class Frame {
     private Color[][] frame;
     int width;
     int height;
+    Color DEFAULT_COLOR = new Color(0, 0, 0);
     Color frameColor;
 
     /**
@@ -28,11 +29,11 @@ public class Frame {
     }
 
     public Frame() {
-        createFrame(DEFAULT_DISPLAY_SIZE, DEFAULT_DISPLAY_SIZE, new Color());
+        createFrame(DEFAULT_DISPLAY_SIZE, DEFAULT_DISPLAY_SIZE, DEFAULT_COLOR);
     }
 
     public Frame(int width, int height) {
-        createFrame(width, height, new Color());
+        createFrame(width, height, DEFAULT_COLOR);
     }
 
     public Frame(int width, int height, Color c) {
@@ -473,9 +474,10 @@ public class Frame {
         String filename = "output.ppm";
         savePpm(filename);
         try {
-            Runtime.getRuntime().exec("display " + filename);
+            Process p = Runtime.getRuntime().exec("display " + filename);
+            p.waitFor();
         }
-        catch (IOException e) {
+        catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
