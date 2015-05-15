@@ -101,14 +101,16 @@ public class MdlReader {
                 double x = values[0], y = values[1], z = values[2];
                 Matrix temp = new Matrix();
                 temp.makeTranslate(x, y, z);
-                origins.peek().matrixMultiply(temp.transpose());
+                temp.matrixMultiply(origins.pop());
+                origins.push(temp);
             }
             else if (oc instanceof opScale) {
                 double[] values = ((opScale) oc).getValues();
                 double x = values[0], y = values[1], z = values[2];
                 Matrix temp = new Matrix();
                 temp.makeScale(x, y, z);
-                origins.peek().matrixMultiply(temp.transpose());
+                temp.matrixMultiply(origins.pop());
+                origins.push(temp);
             }
             else if (oc instanceof opRotate) {
                 char axis = ((opRotate) oc).getAxis();
@@ -125,7 +127,8 @@ public class MdlReader {
                         temp.makeRotZ(degrees);
                         break;
                 }
-                origins.peek().matrixMultiply(temp.transpose());
+                temp.matrixMultiply(origins.pop());
+                origins.push(temp);
             }
             else if (oc instanceof opBox) {
                 double loc[] = ((opBox) oc).getP1();
@@ -133,7 +136,7 @@ public class MdlReader {
                 double dim[] = ((opBox) oc).getP2();
                 double l = dim[0], h = dim[1], d = dim[2];
                 tmp.addPrism(x, y, z, l, h, d);
-                tmp.matrixMultiply(origins.peek());
+                tmp.matrixMultiply(origins.peek().transpose());
                 frame.drawPolygons(tmp, new Color());
                 tmp.clear();
             }
@@ -142,7 +145,7 @@ public class MdlReader {
                 double cx = center[0], cy = center[1], cz = center[2];
                 double r = ((opSphere) oc).getR();
                 tmp.addSphere(cx, cy, cz, r);
-                tmp.matrixMultiply(origins.peek());
+                tmp.matrixMultiply(origins.peek().transpose());
                 frame.drawPolygons(tmp, new Color());
                 tmp.clear();
             }
@@ -151,7 +154,7 @@ public class MdlReader {
                 double cx = center[0], cy = center[1], cz = center[2];
                 double R = ((opTorus) oc).getR(), r = ((opTorus) oc).getr();
                 tmp.addTorus(cx, cy, cz, R, r);
-                tmp.matrixMultiply(origins.peek());
+                tmp.matrixMultiply(origins.peek().transpose());
                 frame.drawPolygons(tmp, new Color());
                 tmp.clear();
             }
