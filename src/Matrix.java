@@ -8,7 +8,7 @@ public class Matrix {
     protected ArrayList<double[]> matrix;
 
     /**
-     * Method to create a new two-dimentional matrix to store points
+     * Method to create a new two-dimensional matrix to store points
      * @param _rows number of rows in the matrix
      * @param _cols number of columns in the matrix
      */
@@ -190,6 +190,160 @@ public class Matrix {
         }
         output.append("}\n");
         return output.toString();
+    }
+
+    /**
+     * Turns the calling matrix into the appropriate translation matrix using
+     * x, y, and z as the translation offsets
+     * @param x shift in the x-coordinate
+     * @param y shift in the y-coordinate
+     * @param z shift in the z-coordinate
+     */
+    public void makeTranslate(double x, double y, double z) {
+        matrix = newMatrix(0, 4);
+        setMatrix(matrix);
+        double[] xShift = {1.0, 0.0, 0.0, x};
+        double[] yShift = {0.0, 1.0, 0.0, y};
+        double[] zShift = {0.0, 0.0, 1.0, z};
+        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        addRow(xShift);
+        addRow(yShift);
+        addRow(zShift);
+        addRow(identity);
+    }
+
+    /**
+     * Turns the calling matrix into the appropriate scale matrix using
+     * x, y and z as the scale factors
+     * @param x scale in the x-coordinate
+     * @param y scale in the x-coordinate
+     * @param z scale in the x-coordinate
+     */
+    public void makeScale(double x, double y, double z) {
+        matrix = newMatrix(0, 4);
+        setMatrix(matrix);
+        double[] xScale = {x, 0.0, 0.0, 0.0};
+        double[] yScale = {0.0, y, 0.0, 0.0};
+        double[] zScale = {0.0, 0.0, z, 0.0};
+        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        addRow(xScale);
+        addRow(yScale);
+        addRow(zScale);
+        addRow(identity);
+    }
+
+    /**
+     * Turns the calling matrix into the appropriate rotation matrix using
+     * theta as the angle of rotation and X as the axis of rotation.
+     * @param theta angle to rotate in degrees
+     */
+    public void makeRotX(double theta) {
+        matrix = newMatrix(0, 4);
+        setMatrix(matrix);
+        double[] xRotate = {1.0, 0.0, 0.0, 0.0};
+        double[] yRotate = {0.0, Math.cos(Math.toRadians(theta)), -Math.sin(Math.toRadians(theta)), 0.0};
+        double[] zRotate = {0.0, Math.sin(Math.toRadians(theta)), Math.cos(Math.toRadians(theta)), 0.0};
+        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        addRow(xRotate);
+        addRow(yRotate);
+        addRow(zRotate);
+        addRow(identity);
+    }
+
+    /**
+     * Turns the calling matrix into the appropriate rotation matrix using
+     * theta as the angle of rotation and Y as the axis of rotation.
+     * @param theta angle to rotate in degrees
+     */
+    public void makeRotY(double theta) {
+        matrix = newMatrix(0, 4);
+        setMatrix(matrix);
+        double[] xRotate = {Math.cos(Math.toRadians(theta)), 0.0, -Math.sin(Math.toRadians(theta)), 0.0};
+        double[] yRotate = {0.0, 1.0, 0.0, 0.0};
+        double[] zRotate = {Math.sin(Math.toRadians(theta)), 0.0, Math.cos(Math.toRadians(theta)), 0.0};
+        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        addRow(xRotate);
+        addRow(yRotate);
+        addRow(zRotate);
+        addRow(identity);
+    }
+
+    /**
+     * Turns the calling matrix into the appropriate rotation matrix using
+     * theta as the angle of rotation and Z as the axis of rotation.
+     * @param theta angle to rotate in degrees
+     */
+    public void makeRotZ(double theta) {
+        matrix = newMatrix(0, 4);
+        setMatrix(matrix);
+        double[] xRotate = {Math.cos(Math.toRadians(theta)), -Math.sin(Math.toRadians(theta)), 0.0, 0.0};
+        double[] yRotate = {Math.sin(Math.toRadians(theta)), Math.cos(Math.toRadians(theta)), 0.0, 0.0};
+        double[] zRotate = {0.0, 0.0, 1.0, 0.0};
+        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        addRow(xRotate);
+        addRow(yRotate);
+        addRow(zRotate);
+        addRow(identity);
+    }
+
+    /**
+     * Turn the calling matrix into a hermite coefficient generating matrix
+     */
+    public void makeHermite() {
+        matrix = newMatrix(0,4);
+        setMatrix(matrix);
+        double xCoefficient[] = {2.0, -2.0, 1.0, 1.0};
+        double yCoefficient[] = {-3.0, 3.0, -2.0, -1.0};
+        double zCoefficient[] = {0.0, 0.0, 1.0, 0.0};
+        double iCoefficient[] = {1.0, 0.0, 0.0, 0.0};
+        addRow(xCoefficient);
+        addRow(yCoefficient);
+        addRow(zCoefficient);
+        addRow(iCoefficient);
+    }
+
+    /**
+     * Turns the calling matrix into a matrix that provides the coefficients
+     * required to generate a Hermite curve given the values of the 4 parameter
+     * coordinates
+     */
+    public void generateHermiteCoefficients(double p0, double r0, double p1, double r1) {
+        Matrix parameters = new Matrix(0, 1);
+        parameters.addRow(new double[] {p0});
+        parameters.addRow(new double[] {p1});
+        parameters.addRow(new double[] {r0});
+        parameters.addRow(new double[] {r1});
+        matrixMultiply(parameters);
+    }
+
+    /**
+     * Turns the calling matrix into a bezier coefficient generating matrix
+     */
+    public void makeBezier() {
+        matrix = newMatrix(0,4);
+        setMatrix(matrix);
+        double xCoefficient[] = {-1.0, 3.0, -3.0, 1.0};
+        double yCoefficient[] = {3.0, -6.0, 3.0, 0};
+        double zCoefficient[] = {-3.0, 3.0, 0.0, 0.0};
+        double iCoefficient[] = {1.0, 0.0, 0.0, 0.0};
+        addRow(xCoefficient);
+        addRow(yCoefficient);
+        addRow(zCoefficient);
+        addRow(iCoefficient);
+    }
+
+    /**
+     * Turns the calling matrix into a matrix that provides the coefficients
+     * required to generate a Bezier curve given the values of the 4 parameter
+     * coordinates
+     */
+    public void generateBezierCoefficients(double p0, double p1, double p2, double p3) {
+        Matrix parameters = new Matrix(0, 1);
+        parameters.addRow(new double[] {p0});
+        parameters.addRow(new double[] {p1});
+        parameters.addRow(new double[] {p2});
+        parameters.addRow(new double[] {p3});
+        matrixMultiply(parameters);
     }
 
 }

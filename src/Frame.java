@@ -463,7 +463,7 @@ public class Frame {
         String filename = "output.ppm";
         savePpm(filename);
         try {
-            Process p = Runtime.getRuntime().exec("display " + filename);
+            Runtime.getRuntime().exec("display " + filename);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -54,8 +54,8 @@ enum DrawingMode {
 
 public class Parser {
 
-    private EdgeMatrix tfm; // Master transform matrix
-    private EdgeMatrix tfmTemp; // Temporary transform matrix to multiply to the master
+    private Matrix tfm; // Master transform matrix
+    private Matrix tfmTemp; // Temporary transform matrix to multiply to the master
     private EdgeMatrix em; // Master edge matrix
     private Frame frame; // Frame used for drawing and saving
     DrawingMode drawingMode = DrawingMode.LINE; // Mode of drawing (line or polygon)
