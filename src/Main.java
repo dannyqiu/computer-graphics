@@ -7,62 +7,62 @@ import parseTables.*;
 public class Main {
 
     public static void main(String args[]) throws ParseException {
-	ArrayList<opCode> a;
-	SymTab s;
-	MdlParser parser;
-	String file;
-	if (args.length == 1)
-	    file = args[0];
-	else
-	    file = "test.mdl";
-	try {
-	    parser = new MdlParser(new FileReader(file));
-	}
-	catch (IOException e) {
-	    parser = new MdlParser(System.in);
-	}
+        ArrayList<opCode> a;
+        SymTab s;
+        MdlParser parser;
+        String file;
+        if (args.length == 1)
+            file = args[0];
+        else
+            file = "test.mdl";
+        try {
+            parser = new MdlParser(new FileReader(file));
+        }
+        catch (IOException e) {
+            parser = new MdlParser(System.in);
+        }
 
-	parser.start();
-	a = parser.getOps();
-	s = parser.getSymTab();
+        parser.start();
+        a = parser.getOps();
+        s = parser.getSymTab();
 
-	MdlReader mr = new MdlReader( a, s);
-	mr.process();
-	/*
-	System.out.println("Opcodes:");
-	Iterator i = a.iterator();
-	while (i.hasNext())
-	    {
-		System.out.println(i.next());
-	    }
-	System.out.println("\n\n");
-	SymTab s = parser.getSymTab();
-	Set kset = s.keySet();
-	i=kset.iterator();
-	System.out.println("Symbol Table:");
-	while (i.hasNext())
-	    {
-		String key = (String)i.next();
-		Object value=s.get(key);
-		System.out.println(""+key+"="+value);
-	    }
-	*/
+        MdlReader mr = new MdlReader(a, s);
+        mr.process();
+        /*
+         * System.out.println("Opcodes:");
+         * Iterator i = a.iterator();
+         * while (i.hasNext())
+         * {
+         * System.out.println(i.next());
+         * }
+         * System.out.println("\n\n");
+         * SymTab s = parser.getSymTab();
+         * Set kset = s.keySet();
+         * i=kset.iterator();
+         * System.out.println("Symbol Table:");
+         * while (i.hasNext())
+         * {
+         * String key = (String)i.next();
+         * Object value=s.get(key);
+         * System.out.println(""+key+"="+value);
+         * }
+         */
     }
 
     /*
-    public static void main(String[] args) {
-        Parser parser = new Parser();
-        File currentDir = new File("").getAbsoluteFile();
-        System.out.println(currentDir);
-        if (args.length >= 1) {
-            for (int i=0; i<args.length; i++) {
-                parser = new Parser();
-                parser.parseFile(args[i]);
-            }
-        }
-        else {
-            System.out.println("Usage:\n\tjava Main [script-file]");
-        }
-    }
-    */
+     * public static void main(String[] args) {
+     * Parser parser = new Parser();
+     * File currentDir = new File("").getAbsoluteFile();
+     * System.out.println(currentDir);
+     * if (args.length >= 1) {
+     * for (int i=0; i<args.length; i++) {
+     * parser = new Parser();
+     * parser.parseFile(args[i]);
+     * }
+     * }
+     * else {
+     * System.out.println("Usage:\n\tjava Main [script-file]");
+     * }
+     * }
+     */
 }

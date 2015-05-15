@@ -14,7 +14,7 @@ public class Matrix {
      */
     protected ArrayList<double[]> newMatrix(int _rows, int _cols) {
         ArrayList<double[]> matrix = new ArrayList<double[]>();
-        for (int i=0; i<_rows; i++) {
+        for (int i = 0; i < _rows; i++) {
             matrix.add(new double[_cols]);
         }
         return matrix;
@@ -22,7 +22,7 @@ public class Matrix {
 
     /**
      * Method to set the matrix to that of the given matrix
-     * @param m     matrix to set
+     * @param m matrix to set
      * @param _rows number of rows in the matrix
      * @param _cols number of columns in the matrix
      */
@@ -45,12 +45,13 @@ public class Matrix {
     }
 
     /**
-     * Turns the matrix into an identity matrix. Assumes that the matrix is a square
+     * Turns the matrix into an identity matrix. Assumes that the matrix is a
+     * square
      */
     public void identity() {
         if (this.getRows() == this.getCols()) {
-            for (int i=0; i<this.getRows(); i++) {
-                for (int j=0; j<this.getCols(); j++) {
+            for (int i = 0; i < this.getRows(); i++) {
+                for (int j = 0; j < this.getCols(); j++) {
                     if (i == j) {
                         matrix.get(i)[j] = 1;
                     }
@@ -70,8 +71,8 @@ public class Matrix {
      * @param s multiplier value for each element
      */
     public void scalarMultiply(double s) {
-        for (int i=0; i<this.getRows(); i++) {
-            for (int j=0; j<this.getCols(); j++) {
+        for (int i = 0; i < this.getRows(); i++) {
+            for (int j = 0; j < this.getCols(); j++) {
                 matrix.get(i)[j] *= s;
             }
         }
@@ -85,10 +86,10 @@ public class Matrix {
     public void matrixMultiply(Matrix m) {
         if (this.getCols() == m.getRows()) {
             ArrayList<double[]> result = newMatrix(this.getRows(), m.getCols()); // Rows is that of original matrix, Columns is that of the multiplying matrix
-            for (int i=0; i<this.getRows(); i++) {
-                for (int k=0; k<m.getCols(); k++) {
+            for (int i = 0; i < this.getRows(); i++) {
+                for (int k = 0; k < m.getCols(); k++) {
                     double sum = 0;
-                    for (int j=0; j<this.getCols(); j++) {
+                    for (int j = 0; j < this.getCols(); j++) {
                         sum += matrix.get(i)[j] * m.get(j, k);
                     }
                     result.get(i)[k] = sum;
@@ -107,8 +108,8 @@ public class Matrix {
      */
     public Matrix transpose() {
         Matrix result = new Matrix(this.getCols(), this.getRows());
-        for (int i=0; i<this.getRows(); i++) {
-            for (int j=0; j<this.getCols(); j++) {
+        for (int i = 0; i < this.getRows(); i++) {
+            for (int j = 0; j < this.getCols(); j++) {
                 result.matrix.get(j)[i] = matrix.get(i)[j];
             }
         }
@@ -129,8 +130,8 @@ public class Matrix {
      */
     public Matrix copy() {
         Matrix m = new Matrix(this.getRows(), this.getCols());
-        for (int i=0; i<this.getRows(); i++) {
-            for (int j=0; j<this.getCols(); j++) {
+        for (int i = 0; i < this.getRows(); i++) {
+            for (int j = 0; j < this.getCols(); j++) {
                 m.getMatrix().get(i)[j] = this.get(i, j);
             }
         }
@@ -185,7 +186,7 @@ public class Matrix {
     public String toString() {
         StringBuilder output = new StringBuilder();
         output.append("{\n");
-        for (int i=0; i<this.getRows(); i++) {
+        for (int i = 0; i < this.getRows(); i++) {
             output.append(Arrays.toString(matrix.get(i)) + ",\n");
         }
         output.append("}\n");
@@ -202,10 +203,10 @@ public class Matrix {
     public void makeTranslate(double x, double y, double z) {
         matrix = newMatrix(0, 4);
         setMatrix(matrix);
-        double[] xShift = {1.0, 0.0, 0.0, x};
-        double[] yShift = {0.0, 1.0, 0.0, y};
-        double[] zShift = {0.0, 0.0, 1.0, z};
-        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        double[] xShift = { 1.0, 0.0, 0.0, x };
+        double[] yShift = { 0.0, 1.0, 0.0, y };
+        double[] zShift = { 0.0, 0.0, 1.0, z };
+        double[] identity = { 0.0, 0.0, 0.0, 1.0 };
         addRow(xShift);
         addRow(yShift);
         addRow(zShift);
@@ -222,10 +223,10 @@ public class Matrix {
     public void makeScale(double x, double y, double z) {
         matrix = newMatrix(0, 4);
         setMatrix(matrix);
-        double[] xScale = {x, 0.0, 0.0, 0.0};
-        double[] yScale = {0.0, y, 0.0, 0.0};
-        double[] zScale = {0.0, 0.0, z, 0.0};
-        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        double[] xScale = { x, 0.0, 0.0, 0.0 };
+        double[] yScale = { 0.0, y, 0.0, 0.0 };
+        double[] zScale = { 0.0, 0.0, z, 0.0 };
+        double[] identity = { 0.0, 0.0, 0.0, 1.0 };
         addRow(xScale);
         addRow(yScale);
         addRow(zScale);
@@ -240,10 +241,10 @@ public class Matrix {
     public void makeRotX(double theta) {
         matrix = newMatrix(0, 4);
         setMatrix(matrix);
-        double[] xRotate = {1.0, 0.0, 0.0, 0.0};
-        double[] yRotate = {0.0, Math.cos(Math.toRadians(theta)), -Math.sin(Math.toRadians(theta)), 0.0};
-        double[] zRotate = {0.0, Math.sin(Math.toRadians(theta)), Math.cos(Math.toRadians(theta)), 0.0};
-        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        double[] xRotate = { 1.0, 0.0, 0.0, 0.0 };
+        double[] yRotate = { 0.0, Math.cos(Math.toRadians(theta)), -Math.sin(Math.toRadians(theta)), 0.0 };
+        double[] zRotate = { 0.0, Math.sin(Math.toRadians(theta)), Math.cos(Math.toRadians(theta)), 0.0 };
+        double[] identity = { 0.0, 0.0, 0.0, 1.0 };
         addRow(xRotate);
         addRow(yRotate);
         addRow(zRotate);
@@ -258,10 +259,10 @@ public class Matrix {
     public void makeRotY(double theta) {
         matrix = newMatrix(0, 4);
         setMatrix(matrix);
-        double[] xRotate = {Math.cos(Math.toRadians(theta)), 0.0, -Math.sin(Math.toRadians(theta)), 0.0};
-        double[] yRotate = {0.0, 1.0, 0.0, 0.0};
-        double[] zRotate = {Math.sin(Math.toRadians(theta)), 0.0, Math.cos(Math.toRadians(theta)), 0.0};
-        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        double[] xRotate = { Math.cos(Math.toRadians(theta)), 0.0, -Math.sin(Math.toRadians(theta)), 0.0 };
+        double[] yRotate = { 0.0, 1.0, 0.0, 0.0 };
+        double[] zRotate = { Math.sin(Math.toRadians(theta)), 0.0, Math.cos(Math.toRadians(theta)), 0.0 };
+        double[] identity = { 0.0, 0.0, 0.0, 1.0 };
         addRow(xRotate);
         addRow(yRotate);
         addRow(zRotate);
@@ -276,10 +277,10 @@ public class Matrix {
     public void makeRotZ(double theta) {
         matrix = newMatrix(0, 4);
         setMatrix(matrix);
-        double[] xRotate = {Math.cos(Math.toRadians(theta)), -Math.sin(Math.toRadians(theta)), 0.0, 0.0};
-        double[] yRotate = {Math.sin(Math.toRadians(theta)), Math.cos(Math.toRadians(theta)), 0.0, 0.0};
-        double[] zRotate = {0.0, 0.0, 1.0, 0.0};
-        double[] identity = {0.0, 0.0, 0.0, 1.0};
+        double[] xRotate = { Math.cos(Math.toRadians(theta)), -Math.sin(Math.toRadians(theta)), 0.0, 0.0 };
+        double[] yRotate = { Math.sin(Math.toRadians(theta)), Math.cos(Math.toRadians(theta)), 0.0, 0.0 };
+        double[] zRotate = { 0.0, 0.0, 1.0, 0.0 };
+        double[] identity = { 0.0, 0.0, 0.0, 1.0 };
         addRow(xRotate);
         addRow(yRotate);
         addRow(zRotate);
@@ -290,12 +291,12 @@ public class Matrix {
      * Turn the calling matrix into a hermite coefficient generating matrix
      */
     public void makeHermite() {
-        matrix = newMatrix(0,4);
+        matrix = newMatrix(0, 4);
         setMatrix(matrix);
-        double xCoefficient[] = {2.0, -2.0, 1.0, 1.0};
-        double yCoefficient[] = {-3.0, 3.0, -2.0, -1.0};
-        double zCoefficient[] = {0.0, 0.0, 1.0, 0.0};
-        double iCoefficient[] = {1.0, 0.0, 0.0, 0.0};
+        double xCoefficient[] = { 2.0, -2.0, 1.0, 1.0 };
+        double yCoefficient[] = { -3.0, 3.0, -2.0, -1.0 };
+        double zCoefficient[] = { 0.0, 0.0, 1.0, 0.0 };
+        double iCoefficient[] = { 1.0, 0.0, 0.0, 0.0 };
         addRow(xCoefficient);
         addRow(yCoefficient);
         addRow(zCoefficient);
@@ -307,12 +308,13 @@ public class Matrix {
      * required to generate a Hermite curve given the values of the 4 parameter
      * coordinates
      */
-    public void generateHermiteCoefficients(double p0, double r0, double p1, double r1) {
+    public void generateHermiteCoefficients(double p0, double r0, double p1,
+            double r1) {
         Matrix parameters = new Matrix(0, 1);
-        parameters.addRow(new double[] {p0});
-        parameters.addRow(new double[] {p1});
-        parameters.addRow(new double[] {r0});
-        parameters.addRow(new double[] {r1});
+        parameters.addRow(new double[] { p0 });
+        parameters.addRow(new double[] { p1 });
+        parameters.addRow(new double[] { r0 });
+        parameters.addRow(new double[] { r1 });
         matrixMultiply(parameters);
     }
 
@@ -320,12 +322,12 @@ public class Matrix {
      * Turns the calling matrix into a bezier coefficient generating matrix
      */
     public void makeBezier() {
-        matrix = newMatrix(0,4);
+        matrix = newMatrix(0, 4);
         setMatrix(matrix);
-        double xCoefficient[] = {-1.0, 3.0, -3.0, 1.0};
-        double yCoefficient[] = {3.0, -6.0, 3.0, 0};
-        double zCoefficient[] = {-3.0, 3.0, 0.0, 0.0};
-        double iCoefficient[] = {1.0, 0.0, 0.0, 0.0};
+        double xCoefficient[] = { -1.0, 3.0, -3.0, 1.0 };
+        double yCoefficient[] = { 3.0, -6.0, 3.0, 0 };
+        double zCoefficient[] = { -3.0, 3.0, 0.0, 0.0 };
+        double iCoefficient[] = { 1.0, 0.0, 0.0, 0.0 };
         addRow(xCoefficient);
         addRow(yCoefficient);
         addRow(zCoefficient);
@@ -337,16 +339,18 @@ public class Matrix {
      * required to generate a Bezier curve given the values of the 4 parameter
      * coordinates
      */
-    public void generateBezierCoefficients(double p0, double p1, double p2, double p3) {
+    public void generateBezierCoefficients(double p0, double p1, double p2,
+            double p3) {
         Matrix parameters = new Matrix(0, 1);
-        parameters.addRow(new double[] {p0});
-        parameters.addRow(new double[] {p1});
-        parameters.addRow(new double[] {p2});
-        parameters.addRow(new double[] {p3});
+        parameters.addRow(new double[] { p0 });
+        parameters.addRow(new double[] { p1 });
+        parameters.addRow(new double[] { p2 });
+        parameters.addRow(new double[] { p3 });
         matrixMultiply(parameters);
     }
 
 }
 
 class NonSquareMatrixException extends RuntimeException {}
+
 class MatrixMultiplicationDimensionException extends RuntimeException {}

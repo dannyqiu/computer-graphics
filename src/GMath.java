@@ -14,7 +14,7 @@ public class GMath {
             throw new UnequalVectorLengthsException();
         }
         double sum = 0;
-        for (int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             sum += a[i] * b[i];
         }
         return sum;
@@ -25,16 +25,17 @@ public class GMath {
      * length of 3 (for each axis - x, y, z)
      * @param a vector to take the cross product with
      * @param b vector to take the cross product with
-     * @return double array representing the cross product of the two given vectors
+     * @return double array representing the cross product of the two given
+     *         vectors
      */
     public static double[] crossProduct(double[] a, double[] b) {
         if (a.length < 3 || b.length < 3) {
             throw new VectorLengthTooShortException();
         }
         double[] cross = new double[3];
-        cross[0] = a[1]*b[2] - a[2]*b[1];
-        cross[1] = a[2]*b[0] - a[0]*b[2];
-        cross[2] = a[0]*b[1] - a[1]*b[0];
+        cross[0] = a[1] * b[2] - a[2] * b[1];
+        cross[1] = a[2] * b[0] - a[0] * b[2];
+        cross[2] = a[0] * b[1] - a[1] * b[0];
         return cross;
     }
 
@@ -45,7 +46,7 @@ public class GMath {
      */
     public static double getMagnitude(double[] a) {
         double sum = 0;
-        for (int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             sum += a[i] * a[i];
         }
         return sum;
@@ -53,4 +54,5 @@ public class GMath {
 }
 
 class UnequalVectorLengthsException extends RuntimeException {}
+
 class VectorLengthTooShortException extends RuntimeException {}

@@ -3,8 +3,8 @@ import java.io.*;
 
 public class EdgeMatrix extends Matrix {
 
-    private static double STEP_SIZE = 1.0/1000;
-    private static double CIRCULAR_STEP_SIZE = 1.0/18;
+    private static double STEP_SIZE = 1.0 / 1000;
+    private static double CIRCULAR_STEP_SIZE = 1.0 / 18;
 
     public EdgeMatrix() {
         super(0, 4);
@@ -21,11 +21,11 @@ public class EdgeMatrix extends Matrix {
      * @param z z-coordinate of point
      */
     public void addPoint(double x, double y, double z) {
-        double[] p = {x, y, z, 1.0};
+        double[] p = { x, y, z, 1.0 };
         super.addRow(p);
     }
 
-    /**
+    /** @formatter:off
      * Adds an edge to the matrix given x, y, z coordinates for the two points
      * that define the edge line
      * @param x0 x-coordinate of starting point
@@ -41,7 +41,7 @@ public class EdgeMatrix extends Matrix {
         addPoint(x1, y1, z1);
     }
 
-    /**
+    /** @formatter:off
      * Adds the vertices (x0, y0, z0), (x1, y1, z1), and (x2, y2, z2) to the
      * polygon matrix. They define a single triangular surface
      */
@@ -90,7 +90,7 @@ public class EdgeMatrix extends Matrix {
         HERMITE, BEZIER
     }
 
-    /**
+    /** @formatter:off
      * Generates the edges required to create a curve and adds them to the
      * edge matrix
      * @param type enum for the type of curve
@@ -108,7 +108,7 @@ public class EdgeMatrix extends Matrix {
         }
     }
 
-    /**
+    /** @formatter:off
      * Generates the edges required to create a hermite curve and adds them
      * to the edge matrix
      * @param x0 the starting point x-coordinate
@@ -152,7 +152,7 @@ public class EdgeMatrix extends Matrix {
         }
     }
 
-    /**
+    /** @formatter:off
      * Generates the edges required to create a bezier curve and adds them
      * to the edge matrix
      * @param x0 the starting point x-coordinate
@@ -196,7 +196,7 @@ public class EdgeMatrix extends Matrix {
         }
     }
 
-    /**
+    /** @formatter:off
      * Adds the points for a rectangular prism to the edge matrix given
      * coordinates that specify the upper-left-front corner of the prism
      * and its dimensions
@@ -256,7 +256,7 @@ public class EdgeMatrix extends Matrix {
                    x, y, z1);
     }
 
-    /**
+    /** @formatter:off
      * Adds a sphere to the edge matrix given coordinates that specify
      * the center its radius
      * @param cx x-coordinate of the center
@@ -299,7 +299,7 @@ public class EdgeMatrix extends Matrix {
         }
     }
 
-    /**
+    /** @formatter:off
      * Generates a sphere's points in the edge matrix given coordinates
      * that specify the center and the radius
      * @param cx x-coordinate of the center
@@ -320,7 +320,7 @@ public class EdgeMatrix extends Matrix {
         }
     }
 
-    /**
+    /** @formatter:off
      * Adds a torus to the edge matrix given coordinates that specify
      * the center, the circle radius, and the torus radius
      * @param cx x-coordinate of the center
@@ -372,7 +372,5 @@ public class EdgeMatrix extends Matrix {
             }
         }
     }
-
-
 
 }

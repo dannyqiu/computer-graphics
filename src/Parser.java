@@ -1,5 +1,5 @@
+// @formatter:off
 /*========== Parser.java ==========
-
 Goes through a file and performs all of the actions listed.
 The file follows the following format:
     Every command is a single character that takes up a line
@@ -44,6 +44,7 @@ The file follows the following format:
         q: end parsing
 
 =================================*/
+// @formatter:on
 
 import java.io.*;
 import java.util.*;
@@ -73,7 +74,8 @@ public class Parser {
     }
 
     /**
-     * Goes through the input stream referred to by in, scans it for the commands
+     * Goes through the input stream referred to by in, scans it for the
+     * commands
      * as shown in the guide above, and performs the required commands
      * @param in BufferedReader referenced to the opened file
      */
@@ -97,7 +99,8 @@ public class Parser {
                         break;
                     case 'l':
                         args = parseArgs(getNextLine(in));
-                        em.addEdge(args[0], args[1], args[2], args[3], args[4], args[5]);
+                        em.addEdge(args[0], args[1], args[2], args[3], args[4],
+                                args[5]);
                         break;
                     case 'c':
                         args = parseArgs(getNextLine(in));
@@ -105,15 +108,20 @@ public class Parser {
                         break;
                     case 'h':
                         args = parseArgs(getNextLine(in));
-                        em.addCurve(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], EdgeMatrix.CurveType.HERMITE);
+                        em.addCurve(args[0], args[1], args[2], args[3],
+                                args[4], args[5], args[6], args[7],
+                                EdgeMatrix.CurveType.HERMITE);
                         break;
                     case 'b':
                         args = parseArgs(getNextLine(in));
-                        em.addCurve(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], EdgeMatrix.CurveType.BEZIER);
+                        em.addCurve(args[0], args[1], args[2], args[3],
+                                args[4], args[5], args[6], args[7],
+                                EdgeMatrix.CurveType.BEZIER);
                         break;
                     case 'p':
                         args = parseArgs(getNextLine(in));
-                        em.addPrism(args[0], args[1], args[2], args[3], args[4], args[5]);
+                        em.addPrism(args[0], args[1], args[2], args[3],
+                                args[4], args[5]);
                         break;
                     case 'm':
                         args = parseArgs(getNextLine(in));
@@ -130,7 +138,8 @@ public class Parser {
                             em.addTorus(args[0], args[1], 0, args[2], args[3]);
                         }
                         else {
-                            em.addTorus(args[0], args[1], args[2], args[3], args[4]);
+                            em.addTorus(args[0], args[1], args[2], args[3],
+                                    args[4]);
                         }
                         break;
                     case 'i':
@@ -174,20 +183,24 @@ public class Parser {
                         String filename = stringStrip(getNextLine(in));
                         frame.clearFrame();
                         if (drawingMode == DrawingMode.POLYGON) {
-                            frame.drawPolygons(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                            frame.drawPolygons(em, new Color(r.nextInt(255),
+                                    r.nextInt(255), r.nextInt(255)));
                         }
                         else {
-                            frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                            frame.drawLines(em, new Color(r.nextInt(255),
+                                    r.nextInt(255), r.nextInt(255)));
                         }
                         frame.saveImage(filename);
                         break;
                     case 'v':
                         frame.clearFrame();
                         if (drawingMode == DrawingMode.POLYGON) {
-                            frame.drawPolygons(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                            frame.drawPolygons(em, new Color(r.nextInt(255),
+                                    r.nextInt(255), r.nextInt(255)));
                         }
                         else {
-                            frame.drawLines(em, new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+                            frame.drawLines(em, new Color(r.nextInt(255),
+                                    r.nextInt(255), r.nextInt(255)));
                         }
                         frame.viewFrame();
                         break;
@@ -225,7 +238,8 @@ public class Parser {
     }
 
     /**
-     * Goes through the input stream referred to by in, scans it for the commands
+     * Goes through the input stream referred to by in, scans it for the
+     * commands
      * as shown in the guide above, and performs the required commands
      * @param filename path of file to read from
      */
@@ -243,7 +257,8 @@ public class Parser {
     }
 
     /**
-     * Takes a line of input and returns a double array with space as a delimiter
+     * Takes a line of input and returns a double array with space as a
+     * delimiter
      * @param line string to parse arguments from
      * @return double array of parsed arguments
      */
@@ -252,7 +267,7 @@ public class Parser {
         line = stringStrip(line);
         String[] args = line.split(" ");
         double[] doubleArgs = new double[args.length];
-        for (int i=0; i<args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             doubleArgs[i] = Double.parseDouble(args[i]);
         }
         return doubleArgs;
