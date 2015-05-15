@@ -90,7 +90,7 @@ public class Matrix {
                 for (int k = 0; k < m.getCols(); k++) {
                     double sum = 0;
                     for (int j = 0; j < this.getCols(); j++) {
-                        sum += matrix.get(i)[j] * m.get(j, k);
+                        sum += this.get(i, j) * m.get(j, k);
                     }
                     result.get(i)[k] = sum;
                 }
