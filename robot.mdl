@@ -1,27 +1,86 @@
-//body
+//adjustments
 push
-move 250 250 0
-//rotate y 30
-//rotate x 20
-box -75 -100 40 150 200 80
-display
-//head
-push
-move 0 151 0
-//"eyeball"
-//rotate y 90
-sphere 0 0 0 50
-display
-//left arm
+    scale .8 .8 .8
+    move 222.5 120 0
+    push
+        move 250 250 0
+        rotate y -30
+        rotate x 20
+        //body
+        box -75 -100 40 150 200 80
+        //head
+        push
+            move 0 151 0
+            sphere 0 0 25 50
+        pop
+        //left arm
+        push
+            move 76 -80 0
+            box 0 0 20 40 180 40
+        pop
+        //right arm
+        push
+            move -75 -80 0
+            box -40 0 20 40 180 40
+        pop
+        //left leg
+        push
+            move -75 -100 0
+            push
+                rotate z -10
+                box 0 -200 20 80 200 40
+            pop
+            //right leg
+            push
+                rotate z 10
+                box 69 -226 20 80 200 40
+            pop
+        pop
+    pop
 pop
 push
-move 75 -80 0
-box 0 0 20 40 180 40
-display
-//right arm
+    scale .8 .8 .8
+    move -97.5 120 0
+    push
+        move 250 250 0
+        rotate y 30
+        rotate x 20
+        //body
+        box -75 -100 40 150 200 80
+        //head
+        push
+            move 0 151 0
+            sphere 0 0 25 50
+        pop
+        //left arm
+        push
+            move 76 -80 0
+            box 0 0 20 40 180 40
+        pop
+        //right arm
+        push
+            move -75 -80 0
+            box -40 0 20 40 180 40
+        pop
+        //left leg
+        push
+            move -75 -100 0
+            push
+                rotate z -10
+                box 0 -200 20 80 200 40
+            pop
+            //right leg
+            push
+                rotate z 10
+                box 69 -226 20 80 200 40
+            pop
+        pop
+    pop
 pop
 push
-move -75 -80 0
-box 0 0 0 -40 180 40
+    move 250 250 0
+    rotate x 5
+    torus 0 -30 0 30 240
+pop
 display
 save robot.png

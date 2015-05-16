@@ -146,11 +146,9 @@ public class MdlReader {
                 double dim[] = ((opBox) oc).getP2();
                 double l = dim[0], h = dim[1], d = dim[2];
                 tmp.addPrism(x, y, z, l, h, d);
-                printStack();
                 tmp.matrixMultiply(origins.peek().transpose());
                 frame.drawPolygons(tmp, new Color());
                 tmp.clear();
-                printStack();
             }
             else if (oc instanceof opSphere) {
                 double center[] = ((opSphere) oc).getCenter();
