@@ -63,6 +63,9 @@ public class MdlReader {
         origins.push(m);
     }
 
+    /**
+     * Prints all commands that have been parsed by MDL
+     */
     public void printCommands() {
         Iterator<opCode> i = opcodes.iterator();
         while (i.hasNext()) {
@@ -70,6 +73,9 @@ public class MdlReader {
         }
     }
 
+    /**
+     * Prints all systems that have been parsed by MDL
+     */
     public void printSymbols() {
         Iterator<String> i = symKeys.iterator();
         System.out.println("Symbol Table:");
@@ -78,6 +84,13 @@ public class MdlReader {
             Object value = symbols.get(key);
             System.out.println(key + "=" + value);
         }
+    }
+
+    /**
+     * Prints the matrix values in the stack
+     */
+    public void printStack() {
+        System.out.println(origins);
     }
 
     /**
@@ -101,16 +114,14 @@ public class MdlReader {
                 double x = values[0], y = values[1], z = values[2];
                 Matrix temp = new Matrix();
                 temp.makeTranslate(x, y, z);
-                temp.matrixMultiply(origins.pop());
-                origins.push(temp);
+                origins.peek().matrixMultiply(temp);
             }
             else if (oc instanceof opScale) {
                 double[] values = ((opScale) oc).getValues();
                 double x = values[0], y = values[1], z = values[2];
                 Matrix temp = new Matrix();
                 temp.makeScale(x, y, z);
-                temp.matrixMultiply(origins.pop());
-                origins.push(temp);
+                origins.peek().matrixMultiply(temp);
             }
             else if (oc instanceof opRotate) {
                 char axis = ((opRotate) oc).getAxis();
@@ -127,8 +138,7 @@ public class MdlReader {
                         temp.makeRotZ(degrees);
                         break;
                 }
-                temp.matrixMultiply(origins.pop());
-                origins.push(temp);
+                origins.peek().matrixMultiply(temp);
             }
             else if (oc instanceof opBox) {
                 double loc[] = ((opBox) oc).getP1();
@@ -136,9 +146,11 @@ public class MdlReader {
                 double dim[] = ((opBox) oc).getP2();
                 double l = dim[0], h = dim[1], d = dim[2];
                 tmp.addPrism(x, y, z, l, h, d);
+                printStack();
                 tmp.matrixMultiply(origins.peek().transpose());
                 frame.drawPolygons(tmp, new Color());
                 tmp.clear();
+                printStack();
             }
             else if (oc instanceof opSphere) {
                 double center[] = ((opSphere) oc).getCenter();

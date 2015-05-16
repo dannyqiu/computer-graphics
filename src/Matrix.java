@@ -129,13 +129,13 @@ public class Matrix {
      * @return copy of the matrix
      */
     public Matrix copy() {
-        Matrix m = new Matrix(this.getRows(), this.getCols());
+        Matrix copy = new Matrix(this.getRows(), this.getCols());
         for (int i = 0; i < this.getRows(); i++) {
             for (int j = 0; j < this.getCols(); j++) {
-                m.getMatrix().get(i)[j] = this.get(i, j);
+                copy.matrix.get(i)[j] = matrix.get(i)[j];
             }
         }
-        return m;
+        return copy;
     }
 
     /**
@@ -235,7 +235,8 @@ public class Matrix {
 
     /**
      * Turns the calling matrix into the appropriate rotation matrix using
-     * theta as the angle of rotation and X as the axis of rotation.
+     * theta as the angle of rotation and X as the axis of rotation. The
+     * positive X direction is clockwise when looking left on the YZ plane.
      * @param theta angle to rotate in degrees
      */
     public void makeRotX(double theta) {
@@ -253,7 +254,8 @@ public class Matrix {
 
     /**
      * Turns the calling matrix into the appropriate rotation matrix using
-     * theta as the angle of rotation and Y as the axis of rotation.
+     * theta as the angle of rotation and Y as the axis of rotation. The
+     * positive Y direction is clockwise when looking down on the XZ plane.
      * @param theta angle to rotate in degrees
      */
     public void makeRotY(double theta) {
@@ -271,7 +273,9 @@ public class Matrix {
 
     /**
      * Turns the calling matrix into the appropriate rotation matrix using
-     * theta as the angle of rotation and Z as the axis of rotation.
+     * theta as the angle of rotation and Z as the axis of rotation. The
+     * positive Z direction is counterclockwise when looking towards the screen
+     * on the XY plane
      * @param theta angle to rotate in degrees
      */
     public void makeRotZ(double theta) {
