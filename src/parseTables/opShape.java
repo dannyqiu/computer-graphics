@@ -1,8 +1,7 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opShape extends opCode {
+
     protected String cs;
     protected String constants;
 

@@ -1,8 +1,7 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opSaveknobs extends opCode {
+
     private String name;
 
     public opSaveknobs(String name) {

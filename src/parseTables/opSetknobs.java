@@ -1,8 +1,7 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opSetknobs extends opCode {
+
     private double value;
 
     public opSetknobs(double value) {

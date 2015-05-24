@@ -1,7 +1,5 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opAmbient extends opCode {
 
     private double[] rgb;

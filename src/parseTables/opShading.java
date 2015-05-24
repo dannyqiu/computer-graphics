@@ -1,8 +1,7 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opShading extends opCode {
+
     private String name;
 
     public opShading(String name) {

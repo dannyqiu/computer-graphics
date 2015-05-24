@@ -1,7 +1,5 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opVary extends opCode {
     private String knob;
     private int startframe, endframe;

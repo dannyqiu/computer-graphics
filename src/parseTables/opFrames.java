@@ -1,8 +1,7 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opFrames extends opCode {
+
     private int num;
 
     public opFrames(int num) {

@@ -1,7 +1,5 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opConstants extends opCode {
 
     private String name;

@@ -1,8 +1,7 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opFocal extends opCode {
+
     private double value;
 
     public opFocal(double value) {

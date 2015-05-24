@@ -1,8 +1,7 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opSet extends opCode {
+
     private String name;
     private double value;
 

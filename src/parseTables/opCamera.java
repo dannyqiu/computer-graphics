@@ -1,7 +1,5 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opCamera extends opCode {
 
     private double[] eye;

@@ -1,8 +1,7 @@
 package parseTables;
 
-import parseTables.*;
-
 public class opTween extends opCode {
+
     private int start, stop;
     private String k1, k2;
 

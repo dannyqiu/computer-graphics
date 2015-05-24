@@ -3,6 +3,7 @@ package parseTables;
 import java.util.*;
 
 public class SymTab {
+
     private HashMap<String, Object> table;
 
     public SymTab() {
@@ -23,12 +24,11 @@ public class SymTab {
 
     public String toString() {
         String s = "";
-        Set keys = table.keySet();
-        Iterator i = keys.iterator();
+        Set<String> keys = table.keySet();
+        Iterator<String> i = keys.iterator();
         while (i.hasNext()) {
-            String k = (String) i.next();
-            s = s + k + ":" + table.get(k);
-            s = s + "\n";
+            String k = i.next();
+            s = k + ":" + table.get(k) + "\n";
         }
         return s;
     }

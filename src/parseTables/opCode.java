@@ -1,7 +1,5 @@
 package parseTables;
 
-import java.util.Arrays;
-
 public class opCode {
 
     protected String triple(double[] s) {
