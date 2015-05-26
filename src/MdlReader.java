@@ -147,18 +147,21 @@ public class MdlReader {
             while (i.hasNext()) {
                 oc = (opCode) i.next();
                 if (oc instanceof opVary) {
-                    Double[] knobValues = new Double[numFrames];
+                    Double[] knobValues = knobs.getOrDefault(
+                            ((opVary) oc).getKnob(), new Double[numFrames]);
                     int start = ((opVary) oc).getStartframe();
                     int end = ((opVary) oc).getEndframe();
                     double startVal = ((opVary) oc).getStartval();
                     double endVal = ((opVary) oc).getEndval();
                     double change = (endVal - startVal) / (end - start + 1);
                     for (int f = start; f <= end; f++) {
-                        knobValues[f] = f * change;
+                        startVal += change;
+                        knobValues[f] = startVal;
                     }
                     knobs.put(((opVary) oc).getKnob(), knobValues);
                 }
             }
+            Utils.deleteDirectory(new File(basename));
             new File(basename).mkdir();
             int numLength = Integer.toString(numFrames).length();
             formatString = basename + "/" + basename + "-%0" + numLength + "d";
@@ -192,7 +195,9 @@ public class MdlReader {
                     double x = values[0], y = values[1], z = values[2];
                     if (((opMove) oc).getKnob() != null) {
                         double knobValue = knobs.get(((opMove) oc).getKnob())[f];
-                        x *= knobValue; y *= knobValue; z *= knobValue;
+                        x *= knobValue;
+                        y *= knobValue;
+                        z *= knobValue;
                     }
                     Matrix temp = new Matrix();
                     temp.makeTranslate(x, y, z);
@@ -203,7 +208,9 @@ public class MdlReader {
                     double x = values[0], y = values[1], z = values[2];
                     if (((opScale) oc).getKnob() != null) {
                         double knobValue = knobs.get(((opScale) oc).getKnob())[f];
-                        x *= knobValue; y *= knobValue; z *= knobValue;
+                        x *= knobValue;
+                        y *= knobValue;
+                        z *= knobValue;
                     }
                     Matrix temp = new Matrix();
                     temp.makeScale(x, y, z);
