@@ -166,7 +166,6 @@ public class MdlReader {
         else {
             numFrames = 1;
         }
-        printKnobs();
     }
 
     /**
@@ -190,26 +189,22 @@ public class MdlReader {
                 }
                 else if (oc instanceof opMove) {
                     double[] values = ((opMove) oc).getValues();
+                    double x = values[0], y = values[1], z = values[2];
                     if (((opMove) oc).getKnob() != null) {
                         double knobValue = knobs.get(((opMove) oc).getKnob())[f];
-                        for (int v = 0; v < values.length; v++) {
-                            values[v] *= knobValue;
-                        }
+                        x *= knobValue; y *= knobValue; z *= knobValue;
                     }
-                    double x = values[0], y = values[1], z = values[2];
                     Matrix temp = new Matrix();
                     temp.makeTranslate(x, y, z);
                     origins.peek().matrixMultiply(temp);
                 }
                 else if (oc instanceof opScale) {
                     double[] values = ((opScale) oc).getValues();
+                    double x = values[0], y = values[1], z = values[2];
                     if (((opScale) oc).getKnob() != null) {
                         double knobValue = knobs.get(((opScale) oc).getKnob())[f];
-                        for (int v = 0; v < values.length; v++) {
-                            values[v] *= knobValue;
-                        }
+                        x *= knobValue; y *= knobValue; z *= knobValue;
                     }
-                    double x = values[0], y = values[1], z = values[2];
                     Matrix temp = new Matrix();
                     temp.makeScale(x, y, z);
                     origins.peek().matrixMultiply(temp);
@@ -281,7 +276,6 @@ public class MdlReader {
                 }
             }
             if (isAnimation) {
-                System.out.println(f);
                 String filename = String.format(formatString, f);
                 frame.saveImage(filename);
                 reset();
