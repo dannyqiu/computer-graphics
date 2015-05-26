@@ -1,10 +1,36 @@
-frames 100
+frames 130
 basename simple
 push
-move 250 250 0
-scale 2 2 2 bigenator
+move 290 370 0
+rotate x 10
+rotate y -5
+box 0 0 0 150 10 100
+sphere 70 45 0 30
+pop
+push
+move 0 500 0
+move 1 0 0 hmotion
+move 0 1 0 vmotion
+rotate x 180 spinny
 rotate y 360 spinny
-sphere 0 0 0 100
-vary spinny 0 99 0 2
-vary bigenator 0 49 0 1
-vary bigenator 50 99 1 0
+rotate z 270 spinny
+sphere 0 0 0 30
+vary hmotion 0 129 -34 534
+vary vmotion 0 19 0 -470
+vary vmotion 20 35 -470 -200
+vary vmotion 36 51 -200 -470
+vary vmotion 52 63 -470 -280
+vary vmotion 64 75 -280 -470
+vary vmotion 76 84 -470 -340
+vary vmotion 85 93 -340 -470
+vary vmotion 94 99 -470 -390
+vary vmotion 100 105 -390 -470
+vary vmotion 106 108 -470 -430
+vary vmotion 109 111 -430 -470
+vary vmotion 112 113 -470 -450
+vary vmotion 114 115 -450 -470
+vary vmotion 116 116 -470 -460
+vary vmotion 117 117 -460 -470
+vary vmotion 118 129 -470 -470
+vary spinny 0 129 0 5
+pop
