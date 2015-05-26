@@ -194,7 +194,12 @@ public class MdlReader {
                     double[] values = ((opMove) oc).getValues();
                     double x = values[0], y = values[1], z = values[2];
                     if (((opMove) oc).getKnob() != null) {
-                        double knobValue = knobs.get(((opMove) oc).getKnob())[f];
+                        Double[] knobValues = knobs.get(((opMove) oc).getKnob());
+                        if (knobValues == null) {
+                            throw new ParseException(
+                                    "You attempted to use knob '" + ((opMove) oc).getKnob() + "' without defining it.");
+                        }
+                        double knobValue = knobValues[f];
                         x *= knobValue;
                         y *= knobValue;
                         z *= knobValue;
@@ -207,7 +212,12 @@ public class MdlReader {
                     double[] values = ((opScale) oc).getValues();
                     double x = values[0], y = values[1], z = values[2];
                     if (((opScale) oc).getKnob() != null) {
-                        double knobValue = knobs.get(((opScale) oc).getKnob())[f];
+                        Double[] knobValues = knobs.get(((opMove) oc).getKnob());
+                        if (knobValues == null) {
+                            throw new ParseException(
+                                    "You attempted to use knob '" + ((opMove) oc).getKnob() + "' without defining it.");
+                        }
+                        double knobValue = knobValues[f];
                         x *= knobValue;
                         y *= knobValue;
                         z *= knobValue;
