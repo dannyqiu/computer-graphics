@@ -1,6 +1,7 @@
 package parseTables;
 
 public class opSphere extends opShape {
+
     private double[] center;
     private double r;
 

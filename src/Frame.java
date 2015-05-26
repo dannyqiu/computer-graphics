@@ -100,7 +100,7 @@ public class Frame {
         for (int i = 0; i < matrix.getRows() - 1; i += 2) { // Get every two points
             double[] p0 = m.get(i);
             double[] p1 = m.get(i + 1);
-            System.out.println("Drawing... " + Arrays.toString(p0) + " to " + Arrays.toString(p1));
+            //System.out.println("Drawing... " + Arrays.toString(p0) + " to " + Arrays.toString(p1));
             drawLine((int) p0[0], (int) p0[1], (int) p1[0], (int) p1[1], c);
         }
     }
@@ -116,7 +116,7 @@ public class Frame {
         for (int i = 0; i < matrix.getRows() - 1; i += 2) { // Get every two points
             double[] p0 = m.get(i);
             double[] p1 = m.get(i + 1);
-            System.out.println("Drawing Cartesian... " + Arrays.toString(p0) + " to " + Arrays.toString(p1));
+            //System.out.println("Drawing Cartesian... " + Arrays.toString(p0) + " to " + Arrays.toString(p1));
             drawLineCartesian((int) p0[0], (int) p0[1], (int) p1[0],
                     (int) p1[1], c);
         }
@@ -136,7 +136,7 @@ public class Frame {
                 double[] p1 = m.get(i + 1);
                 double[] p2 = m.get(i + 2);
                 if (isVisible(p0, p1, p2)) {
-                    System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
+                    //System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
                     drawLine((int) p0[0], (int) p0[1], (int) p1[0],
                             (int) p1[1], c);
                     drawLine((int) p1[0], (int) p1[1], (int) p2[0],

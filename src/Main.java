@@ -28,41 +28,37 @@ public class Main {
 
         MdlReader mr = new MdlReader(a, s);
         mr.process();
-        /*
-         * System.out.println("Opcodes:");
-         * Iterator i = a.iterator();
-         * while (i.hasNext())
-         * {
-         * System.out.println(i.next());
-         * }
-         * System.out.println("\n\n");
-         * SymTab s = parser.getSymTab();
-         * Set kset = s.keySet();
-         * i=kset.iterator();
-         * System.out.println("Symbol Table:");
-         * while (i.hasNext())
-         * {
-         * String key = (String)i.next();
-         * Object value=s.get(key);
-         * System.out.println(""+key+"="+value);
-         * }
-         */
+
+        //System.out.println("Opcodes:");
+        //Iterator<opCode> i = a.iterator();
+        //while (i.hasNext()) {
+        //    System.out.println(i.next());
+        //}
+        //System.out.println("\n\n");
+        //Set<String> kset = s.keySet();
+        //Iterator<String> k = kset.iterator();
+        //System.out.println("Symbol Table:");
+        //while (k.hasNext()) {
+        //    String key = k.next();
+        //    Object value = s.get(key);
+        //    System.out.println(key + "=" + value);
+        //}
+
     }
 
-    /*
-     * public static void main(String[] args) {
-     * Parser parser = new Parser();
-     * File currentDir = new File("").getAbsoluteFile();
-     * System.out.println(currentDir);
-     * if (args.length >= 1) {
-     * for (int i=0; i<args.length; i++) {
-     * parser = new Parser();
-     * parser.parseFile(args[i]);
-     * }
-     * }
-     * else {
-     * System.out.println("Usage:\n\tjava Main [script-file]");
-     * }
-     * }
-     */
+    public static void Parse(String[] args) {
+        Parser parser = new Parser();
+        File currentDir = new File("").getAbsoluteFile();
+        System.out.println(currentDir);
+        if (args.length >= 1) {
+            for (int i = 0; i < args.length; i++) {
+                parser = new Parser();
+                parser.parseFile(args[i]);
+            }
+        }
+        else {
+            System.out.println("Usage:\n\tjava Main [script-file]");
+        }
+    }
+
 }

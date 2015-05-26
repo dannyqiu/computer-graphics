@@ -1,6 +1,7 @@
 package parseTables;
 
 public class opVary extends opCode {
+
     private String knob;
     private int startframe, endframe;
     private double startval, endval;
