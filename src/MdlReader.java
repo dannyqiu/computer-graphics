@@ -154,6 +154,14 @@ public class MdlReader {
                     double startVal = ((opVary) oc).getStartval();
                     double endVal = ((opVary) oc).getEndval();
                     double change = (endVal - startVal) / (end - start + 1);
+                    if (start < 0) {
+                        throw new ParseException(
+                                "The starting frame for knob '" + ((opVary) oc).getKnob() + "' must be at least 0.");
+                    }
+                    if (end >= numFrames) {
+                        throw new ParseException(
+                                "The end frame for knob '" + ((opVary) oc).getKnob() + "' must be less than the number of frames (" + numFrames + ").");
+                    }
                     for (int f = start; f <= end; f++) {
                         startVal += change;
                         knobValues[f] = startVal;
@@ -199,7 +207,11 @@ public class MdlReader {
                             throw new ParseException(
                                     "You attempted to use knob '" + ((opMove) oc).getKnob() + "' without defining it.");
                         }
-                        double knobValue = knobValues[f];
+                        Double knobValue = knobValues[f];
+                        if (knobValue == null) {
+                            throw new ParseException(
+                                    "The knob '" + ((opMove) oc).getKnob() + "' is not defined for frame " + f);
+                        }
                         x *= knobValue;
                         y *= knobValue;
                         z *= knobValue;
@@ -212,12 +224,16 @@ public class MdlReader {
                     double[] values = ((opScale) oc).getValues();
                     double x = values[0], y = values[1], z = values[2];
                     if (((opScale) oc).getKnob() != null) {
-                        Double[] knobValues = knobs.get(((opMove) oc).getKnob());
+                        Double[] knobValues = knobs.get(((opScale) oc).getKnob());
                         if (knobValues == null) {
                             throw new ParseException(
-                                    "You attempted to use knob '" + ((opMove) oc).getKnob() + "' without defining it.");
+                                    "You attempted to use knob '" + ((opScale) oc).getKnob() + "' without defining it.");
                         }
-                        double knobValue = knobValues[f];
+                        Double knobValue = knobValues[f];
+                        if (knobValue == null) {
+                            throw new ParseException(
+                                    "The knob '" + ((opScale) oc).getKnob() + "' is not defined for frame " + f);
+                        }
                         x *= knobValue;
                         y *= knobValue;
                         z *= knobValue;
@@ -230,7 +246,17 @@ public class MdlReader {
                     char axis = ((opRotate) oc).getAxis();
                     double degrees = ((opRotate) oc).getDeg();
                     if (((opRotate) oc).getKnob() != null) {
-                        degrees *= knobs.get(((opRotate) oc).getKnob())[f];
+                        Double[] knobValues = knobs.get(((opRotate) oc).getKnob());
+                        if (knobValues == null) {
+                            throw new ParseException(
+                                    "You attempted to use knob '" + ((opRotate) oc).getKnob() + "' without defining it.");
+                        }
+                        Double knobValue = knobValues[f];
+                        if (knobValue == null) {
+                            throw new ParseException(
+                                    "The knob '" + ((opRotate) oc).getKnob() + "' is not defined for frame " + f);
+                        }
+                        degrees *= knobValue;
                     }
                     Matrix temp = new Matrix();
                     switch (axis) {
