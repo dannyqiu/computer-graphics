@@ -111,6 +111,10 @@ public class MdlReader {
         System.out.println(origins);
     }
 
+    /**
+     * Goes through the mdl file, searching for signs of animations and sets
+     * the values of knobs to prepare for the animation.
+     */
     public void animationPass() throws ParseException {
         Iterator<opCode> i = opcodes.iterator();
         opCode oc;

@@ -128,7 +128,7 @@ camera eye aim		- establishes a camera. Eye and aim are
 save filename		- save the image in its current state under
 			  the name "filename."
 
-gereate_rayfiles	- Instruct the interpreter to generate source
+generate_rayfiles	- Instruct the interpreter to generate source
 			  files for a ray tracer for each frame rendered.
 
 focal value		- set the focal length of the camera
