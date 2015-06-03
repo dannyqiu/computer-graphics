@@ -1,6 +1,6 @@
 SOURCE_DIRECTORY=src
 BUILD_DIRECTORY=bin
-COMPILE_FLAGS=-Xlint:unchecked
+COMPILE_FLAGS=-Xlint:unchecked -source 1.7
 CLEAN_EXTENSIONS=png|ppm|class
 
 all: subs compile

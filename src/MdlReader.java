@@ -151,8 +151,10 @@ public class MdlReader {
             while (i.hasNext()) {
                 oc = (opCode) i.next();
                 if (oc instanceof opVary) {
-                    Double[] knobValues = knobs.getOrDefault(
-                            ((opVary) oc).getKnob(), new Double[numFrames]);
+                    Double[] knobValues = knobs.get(((opVary) oc).getKnob());
+                    if (knobValues == null) {
+                        knobValues = new Double[numFrames];
+                    }
                     int start = ((opVary) oc).getStartframe();
                     int end = ((opVary) oc).getEndframe();
                     double startVal = ((opVary) oc).getStartval();
