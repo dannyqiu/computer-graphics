@@ -5,6 +5,7 @@ public class Frame {
 
     private static final int DEFAULT_DISPLAY_SIZE = 500;
     private Color[][] frame;
+    private double[][] zBuffer;
     int width;
     int height;
     Color DEFAULT_COLOR = new Color(0, 0, 0);
@@ -143,8 +144,66 @@ public class Frame {
                             (int) p2[1], c);
                     drawLine((int) p2[0], (int) p2[1], (int) p0[0],
                             (int) p0[1], c);
+                    scanlineConvert(p0, p1, p2, c);
                 }
             }
+        }
+    }
+
+    /**
+     * Shades a polygon given the three vertices using the horizontal scanline
+     * algorithm going from the bottom to the top.
+     * @param p0 coordinate of one vertex of the polygon
+     * @param p1 coordinate of one vertex of the polygon
+     * @param p2 coordinate of one vertex of the polygon
+     * @param c color of shading on the polygons
+     */
+    private void scanlineConvert(double[] p0, double[] p1, double[] p2, Color c) {
+        double[] temp;
+        // This is to define p0 as the lowest point and p2 as the highest point
+        if (p1[1] > p2[1]) {
+            temp = p1;
+            p1 = p2;
+            p2 = temp;
+        }
+        if (p0[1] > p1[1]) {
+            if (p0[1] > p2[1]) {
+                temp = p0;
+                p0 = p1;
+                p1 = p2;
+                p2 = temp;
+            }
+            else {
+                temp = p0;
+                p0 = p1;
+                p1 = temp;
+            }
+        }
+        double x0 = p0[0];
+        double x1 = x0;
+        int y = (int) p0[1];
+        double dx0 = (p2[0] - p0[0]) / ((int) p2[1] - (int) p0[1]);
+        // Draws the bottom half of the polygon
+        double dx1 = (p1[0] - p0[0]) / ((int) p1[1] - (int) p0[1]);
+        int midY = (int) p1[1];
+        while (y < midY) {
+            x0 += dx0;
+            x1 += dx1;
+            y++;
+            drawLine((int) x0, (int) y, (int) x1, (int) y, c);
+        }
+        x1 = p1[0]; // Sets the start of the top half's end to the x-coor of
+                    // the middle point. This fixes a bug where the middle and
+                    // bottom points have the same y-coor
+        // Draws the top half of the polygon
+        dx1 = (p2[0] - p1[0]) / ((int) p2[1] - (int) p1[1]);
+        int topY = (int) p2[1];
+        while (y < topY) {
+            x0 += dx0;
+            x1 += dx1;
+            y++;
+            drawLine((int) x0, (int) y, (int) x1, (int) y, c);
+
         }
     }
 

@@ -279,7 +279,7 @@ public class EdgeMatrix extends Matrix {
                     addPolygon(points.get(index, 0), points.get(index, 1), points.get(index, 2),
                                points.get(longt, 0), points.get(longt, 1), points.get(longt, 2),
                                points.get(longt+1, 0), points.get(longt+1, 1), points.get(longt+1, 2));
-                    if (longt < longStop-1) { // We don't want it to draw the poles again
+                    if (longt != longStop-1) { // We don't want it to draw the poles again
                         addPolygon(points.get(longt+1, 0), points.get(longt+1, 1), points.get(longt+1, 2),
                                    points.get(index+1, 0), points.get(index+1, 1), points.get(index+1, 2 ),
                                    points.get(index, 0), points.get(index, 1), points.get(index, 2));
@@ -289,7 +289,7 @@ public class EdgeMatrix extends Matrix {
                     addPolygon(points.get(index, 0), points.get(index, 1), points.get(index, 2),
                                points.get(index+numSteps, 0), points.get(index+numSteps, 1), points.get(index+numSteps, 2),
                                points.get(index+numSteps+1, 0), points.get(index+numSteps+1, 1), points.get(index+numSteps+1, 2));
-                    if (longt < longStop-1) { // We don't want it to draw the poles again
+                    if (longt != longStop-1) { // We don't want it to draw the poles again
                         addPolygon(points.get(index+numSteps+1, 0), points.get(index+numSteps+1, 1), points.get(index+numSteps+1, 2),
                                    points.get(index+1, 0), points.get(index+1, 1), points.get(index+1, 2 ),
                                    points.get(index, 0), points.get(index, 1), points.get(index, 2));
