@@ -536,9 +536,7 @@ if (consTok != null)
       jj_la1[10] = jj_gen;
       ;
     }
-System.out.println("we got "+center[0]+center[1]+center[2]+
-                        "radius="+RTok+" r="+rTok+"CS="+csTok);
-        if (consTok != null) cons = consTok.toString();
+if (consTok != null) cons = consTok.toString();
         if (csTok != null) cs=csTok.toString();
         r=Double.parseDouble(rTok.toString());
         R=Double.parseDouble(RTok.toString());

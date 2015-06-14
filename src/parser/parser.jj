@@ -491,8 +491,7 @@ void torus() :
 }
 {
 	<TORUS> (consTok=<ID>)?center=triple() RTok=<DOUBLE> rTok=<DOUBLE> (csTok=<ID>)?
-	{ System.out.println("we got "+center[0]+center[1]+center[2]+
-			"radius="+RTok+" r="+rTok+"CS="+csTok);
+	{
 	if (consTok != null) cons = consTok.toString();
 	if (csTok != null) cs=csTok.toString();
 	r=Double.parseDouble(rTok.toString());
