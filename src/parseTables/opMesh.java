@@ -11,7 +11,7 @@ public class opMesh extends opShape {
     }
 
     public String toString() {
-        return "Mesh: " + filename + "  cs - " + cs + " Contsants - " + constants;
+        return "Mesh: " + filename + "  cs - " + cs + " Constants - " + constants;
     }
 
     public String getFilename() {

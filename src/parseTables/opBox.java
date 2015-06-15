@@ -6,8 +6,7 @@ public class opBox extends opShape {
     private double[] p2;
     private String cs2;
 
-    public opBox(double[] p1, String cs, double[] p2, String cs2,
-            String constants) {
+    public opBox(double[] p1, String cs, double[] p2, String cs2, String constants) {
         this.p1 = p1;
         this.p2 = p2;
         this.cs = cs;

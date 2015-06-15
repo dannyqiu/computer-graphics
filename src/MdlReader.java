@@ -144,8 +144,7 @@ public class MdlReader {
                         "You must specify the number of frames for your animation.");
             }
             if (basename.length() == 0) {
-                throw new ParseException(
-                        "You must specify the basename for your animation.");
+                throw new ParseException("You must specify the basename for your animation.");
             }
             i = opcodes.iterator();
             while (i.hasNext()) {

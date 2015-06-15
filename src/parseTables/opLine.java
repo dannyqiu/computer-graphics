@@ -6,8 +6,7 @@ public class opLine extends opShape {
     private double[] p2;
     private String cs2;
 
-    public opLine(double[] p1, String cs, double[] p2, String cs2,
-            String constants) {
+    public opLine(double[] p1, String cs, double[] p2, String cs2, String constants) {
         this.p1 = p1;
         this.p2 = p2;
         this.cs = cs;

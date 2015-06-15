@@ -5,8 +5,7 @@ public class opTorus extends opShape {
     private double[] center;
     private double R, r;
 
-    public opTorus(double[] center, double R, double r, String cs,
-            String constants) {
+    public opTorus(double[] center, double R, double r, String cs, String constants) {
         this.center = center;
         this.r = r;
         this.R = R;

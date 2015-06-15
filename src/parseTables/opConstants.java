@@ -8,8 +8,8 @@ public class opConstants extends opCode {
     private double[] specular;
     private double[] intensities;
 
-    public opConstants(String name, double[] ambient, double[] diffuse,
-            double[] specular, double[] intensities) {
+    public opConstants(String name, double[] ambient, double[] diffuse, double[] specular,
+            double[] intensities) {
         this.name = name;
         this.ambient = ambient;
         this.diffuse = diffuse;

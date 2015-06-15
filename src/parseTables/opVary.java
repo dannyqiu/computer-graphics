@@ -6,8 +6,7 @@ public class opVary extends opCode {
     private int startframe, endframe;
     private double startval, endval;
 
-    public opVary(String knob, int startframe, int endframe, double startval,
-            double endval) {
+    public opVary(String knob, int startframe, int endframe, double startval, double endval) {
         this.knob = knob;
         this.startframe = startframe;
         this.endframe = endframe;

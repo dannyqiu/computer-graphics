@@ -312,8 +312,7 @@ public class Matrix {
      * required to generate a Hermite curve given the values of the 4 parameter
      * coordinates
      */
-    public void generateHermiteCoefficients(double p0, double r0, double p1,
-            double r1) {
+    public void generateHermiteCoefficients(double p0, double r0, double p1, double r1) {
         Matrix parameters = new Matrix(0, 1);
         parameters.addRow(new double[] { p0 });
         parameters.addRow(new double[] { p1 });
@@ -343,8 +342,7 @@ public class Matrix {
      * required to generate a Bezier curve given the values of the 4 parameter
      * coordinates
      */
-    public void generateBezierCoefficients(double p0, double p1, double p2,
-            double p3) {
+    public void generateBezierCoefficients(double p0, double p1, double p2, double p3) {
         Matrix parameters = new Matrix(0, 1);
         parameters.addRow(new double[] { p0 });
         parameters.addRow(new double[] { p1 });

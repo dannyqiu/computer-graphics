@@ -86,8 +86,7 @@ public class Frame {
             double[] p0 = m.get(i);
             double[] p1 = m.get(i + 1);
             //System.out.println("Drawing... " + Arrays.toString(p0) + " to " + Arrays.toString(p1));
-            drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1],
-                    p1[2], c);
+            drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1], p1[2], c);
         }
     }
 
@@ -106,12 +105,9 @@ public class Frame {
                 double[] p2 = m.get(i + 2);
                 if (isVisible(p0, p1, p2)) {
                     //System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
-                    drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0],
-                            (int) p1[1], p1[2], c);
-                    drawLine((int) p1[0], (int) p1[1], p1[2], (int) p2[0],
-                            (int) p2[1], p2[2], c);
-                    drawLine((int) p2[0], (int) p2[1], p2[2], (int) p0[0],
-                            (int) p0[1], p0[2], c);
+                    drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1], p1[2], c);
+                    drawLine((int) p1[0], (int) p1[1], p1[2], (int) p2[0], (int) p2[1], p2[2], c);
+                    drawLine((int) p2[0], (int) p2[1], p2[2], (int) p0[0], (int) p0[1], p0[2], c);
                     scanlineConvert(p0, p1, p2, c);
                 }
             }
@@ -214,8 +210,7 @@ public class Frame {
      * @param z1 z-coordinate of the ending point
      * @param c color of the line to be drawn
      */
-    public void drawLine(int x0, int y0, double z0, int x1, int y1, double z1,
-            Color c) {
+    public void drawLine(int x0, int y0, double z0, int x1, int y1, double z1, Color c) {
         plot(x0, y0, z0, c);
         if (x0 > x1) { // Swap coordinates so our loop goes from left to right
             int temp;
