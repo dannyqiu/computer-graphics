@@ -22,9 +22,11 @@ public class Frame {
         height = _height;
         frameColor = _color;
         frame = new Color[height][width];
+        zBuffer = new double[height][width];
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
                 frame[j][i] = frameColor;
+                zBuffer[j][i] = Double.NEGATIVE_INFINITY;
             }
         }
     }
@@ -46,9 +48,10 @@ public class Frame {
      * left
      * @param x x-coordinate of point
      * @param y y-coordinate of point
+     * @param z z-coordinate of point
      */
-    public void plot(int x, int y) {
-        plot(x, y, new Color(255, 255, 255));
+    public void plot(int x, int y, double z) {
+        plot(x, y, z, new Color(255, 255, 255));
     }
 
     /**
@@ -56,15 +59,18 @@ public class Frame {
      * the bottom left
      * @param x x-coordinate of point
      * @param y y-coordinate of point
+     * @param z0 z-coordinate of point
      * @param c color of the point
      */
-    public void plot(int x, int y, Color c) {
+    public void plot(int x, int y, double z0, Color c) {
         int adjustedY = height - 1 - y;
         //System.out.println("Plotting... (" + x + ", " + y + ")");
         if (x >= 0 && x < width && adjustedY >= 0 && adjustedY < height) {
-            frame[adjustedY][x] = c;
-        }
-    }
+            //System.out.println(z0 + " " + zBuffer[adjustedY][x] + " " + (z0 > zBuffer[adjustedY][x]));
+            if (z0 > zBuffer[adjustedY][x]) {
+                zBuffer[adjustedY][x] = z0;
+                frame[adjustedY][x] = c;
+            }
         }
     }
 
@@ -80,9 +86,8 @@ public class Frame {
             double[] p0 = m.get(i);
             double[] p1 = m.get(i + 1);
             //System.out.println("Drawing... " + Arrays.toString(p0) + " to " + Arrays.toString(p1));
-            drawLine((int) p0[0], (int) p0[1], (int) p1[0], (int) p1[1], c);
-        }
-    }
+            drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1],
+                    p1[2], c);
         }
     }
 
@@ -101,12 +106,12 @@ public class Frame {
                 double[] p2 = m.get(i + 2);
                 if (isVisible(p0, p1, p2)) {
                     //System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
-                    drawLine((int) p0[0], (int) p0[1], (int) p1[0],
-                            (int) p1[1], c);
-                    drawLine((int) p1[0], (int) p1[1], (int) p2[0],
-                            (int) p2[1], c);
-                    drawLine((int) p2[0], (int) p2[1], (int) p0[0],
-                            (int) p0[1], c);
+                    drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0],
+                            (int) p1[1], p1[2], c);
+                    drawLine((int) p1[0], (int) p1[1], p1[2], (int) p2[0],
+                            (int) p2[1], p2[2], c);
+                    drawLine((int) p2[0], (int) p2[1], p2[2], (int) p0[0],
+                            (int) p0[1], p0[2], c);
                     scanlineConvert(p0, p1, p2, c);
                 }
             }
@@ -142,22 +147,27 @@ public class Frame {
                 p1 = temp;
             }
         }
-        double x0 = p0[0];
-        double x1 = x0;
+        double x0 = p0[0], x1 = x0;
         int y = (int) p0[1];
+        double z0 = p0[2], z1 = z0;
         double dx0 = (p2[0] - p0[0]) / ((int) p2[1] - (int) p0[1]);
+        double dz0 = (p2[2] - p0[2]) / ((int) p2[1] - (int) p0[1]);
         // Draws the bottom half of the polygon
         double dx1 = (p1[0] - p0[0]) / ((int) p1[1] - (int) p0[1]);
+        double dz1 = (p1[2] - p0[2]) / ((int) p1[1] - (int) p0[1]);
         int midY = (int) p1[1];
         while (y < midY) {
             x0 += dx0;
             x1 += dx1;
             y++;
-            drawLine((int) x0, (int) y, (int) x1, (int) y, c);
+            z0 += dz0;
+            z1 += dz1;
+            drawLine((int) x0, y, z0, (int) x1, y, z1, c);
         }
         x1 = p1[0]; // Sets the start of the top half's end to the x-coor of
                     // the middle point. This fixes a bug where the middle and
                     // bottom points have the same y-coor
+        z1 = p1[2];
         // Draws the top half of the polygon
         dx1 = (p2[0] - p1[0]) / ((int) p2[1] - (int) p1[1]);
         int topY = (int) p2[1];
@@ -165,8 +175,7 @@ public class Frame {
             x0 += dx0;
             x1 += dx1;
             y++;
-            drawLine((int) x0, (int) y, (int) x1, (int) y, c);
-
+            drawLine((int) x0, y, z0, (int) x1, y, z1, c);
         }
     }
 
@@ -199,12 +208,15 @@ public class Frame {
      * given color. Origin is at the bottom left
      * @param x0 x-coordinate of the starting point
      * @param y0 y-coordinate of the starting point
+     * @param z0 z-coordinate of the starting point
      * @param x1 x-coordinate of the ending point
      * @param y1 y-coordinate of the ending point
+     * @param z1 z-coordinate of the ending point
      * @param c color of the line to be drawn
      */
-    public void drawLine(int x0, int y0, int x1, int y1, Color c) {
-        plot(x0, y0, c);
+    public void drawLine(int x0, int y0, double z0, int x1, int y1, double z1,
+            Color c) {
+        plot(x0, y0, z0, c);
         if (x0 > x1) { // Swap coordinates so our loop goes from left to right
             int temp;
             temp = x0;
@@ -215,8 +227,10 @@ public class Frame {
             y1 = temp;
         }
         double slope = (double) (y1 - y0) / (double) (x1 - x0);
+        double dz;
         int x = x0;
         int y = y0;
+        double z = z0;
         int A = 2 * (y1 - y0);
         int B = -2 * (x1 - x0);
         int d;
@@ -227,6 +241,7 @@ public class Frame {
              *    = A(x0) + 1/2A + B(x0) + B + C
              *    = 0 + 1/2A + B
              */
+            dz = (double) (z1 - z0) / (double) (y1 - y0);
             d = A / 2 + B;
             while (y <= y1) {
                 plot(x, y, z, c);
@@ -236,6 +251,7 @@ public class Frame {
                 }
                 y++;
                 d += B;
+                z += dz;
             }
         }
         else if (slope >= 0 && slope <= 1) { // Line is below diagonal in Quadrant I
@@ -245,6 +261,7 @@ public class Frame {
              *    = A(x0) + A + B(x0) + 1/2B + C
              *    = 0 + A + 1/2B
              */
+            dz = (double) (z1 - z0) / (double) (x1 - x0);
             d = A + B / 2;
             while (x <= x1) {
                 plot(x, y, z, c);
@@ -254,6 +271,7 @@ public class Frame {
                 }
                 x++;
                 d += A;
+                z += dz;
             }
         }
         else if (slope >= -1 && slope <= 0) { // Line is above the diagonal in Quadrant IV
@@ -263,6 +281,7 @@ public class Frame {
              *    = A(x0) + A + B(x0) - 1/2B + C
              *    = 0 + A - 1/2B
              */
+            dz = (double) (z1 - z0) / (double) (x1 - x0);
             d = A - B / 2;
             while (x <= x1) {
                 plot(x, y, z, c);
@@ -272,6 +291,7 @@ public class Frame {
                 }
                 x++;
                 d += A;
+                z += dz;
             }
         }
         else if (slope < -1) { // Line is below the diagonal in Quadrant IV
@@ -281,6 +301,7 @@ public class Frame {
              *    = A(x0) + 1/2A + B(x0) - B + C
              *    = 0 + 1/2A - B
              */
+            dz = (double) (z1 - z0) / (double) (y1 - y0);
             d = A / 2 - B;
             while (y >= y1) {
                 plot(x, y, z, c);
@@ -290,6 +311,7 @@ public class Frame {
                 }
                 y--;
                 d -= B;
+                z += dz;
             }
         }
     }
