@@ -65,28 +65,6 @@ public class Frame {
             frame[adjustedY][x] = c;
         }
     }
-
-    /**
-     * Plots a point on the frame given its coordinates. Origin is at the center
-     * @param x x-coordinate of point
-     * @param y y-coordinate of point
-     */
-    public void plotCartesian(int x, int y) {
-        plotCartesian(x, y, new Color(255, 255, 255));
-    }
-
-    /**
-     * Plots a point on the frame given its coordinates and color. Origin is at
-     * the center
-     * @param x x-coordinate of point
-     * @param y y-coordinate of point
-     * @param c color of the point
-     */
-    public void plotCartesian(int x, int y, Color c) {
-        int adjustedY = height / 2 - y;
-        //System.out.println("Plotting... (" + x + ", " + y + ")");
-        if (x >= -width / 2 && x < width / 2 && adjustedY >= 0 && adjustedY < height) {
-            frame[adjustedY][x + width / 2] = c;
         }
     }
 
@@ -105,21 +83,6 @@ public class Frame {
             drawLine((int) p0[0], (int) p0[1], (int) p1[0], (int) p1[1], c);
         }
     }
-
-    /**
-     * Goes through the given matrix and draws a line between every two
-     * points using the given color. Origin is at the center
-     * @param matrix matrix containing the points to draw lines
-     * @param c color of the lines to be drawn
-     */
-    public void drawLinesCartesian(Matrix matrix, Color c) {
-        ArrayList<double[]> m = matrix.getMatrix();
-        for (int i = 0; i < matrix.getRows() - 1; i += 2) { // Get every two points
-            double[] p0 = m.get(i);
-            double[] p1 = m.get(i + 1);
-            //System.out.println("Drawing Cartesian... " + Arrays.toString(p0) + " to " + Arrays.toString(p1));
-            drawLineCartesian((int) p0[0], (int) p0[1], (int) p1[0],
-                    (int) p1[1], c);
         }
     }
 
@@ -266,7 +229,7 @@ public class Frame {
              */
             d = A / 2 + B;
             while (y <= y1) {
-                plot(x, y, c);
+                plot(x, y, z, c);
                 if (d < 0) { // Point is to the right of the midpoint
                     x++;
                     d += A;
@@ -284,7 +247,7 @@ public class Frame {
              */
             d = A + B / 2;
             while (x <= x1) {
-                plot(x, y, c);
+                plot(x, y, z, c);
                 if (d > 0) { // Point is above the midpoint
                     y++;
                     d += B;
@@ -302,7 +265,7 @@ public class Frame {
              */
             d = A - B / 2;
             while (x <= x1) {
-                plot(x, y, c);
+                plot(x, y, z, c);
                 if (d < 0) { // Point is below the midpoint
                     y--;
                     d -= B;
@@ -320,107 +283,7 @@ public class Frame {
              */
             d = A / 2 - B;
             while (y >= y1) {
-                plot(x, y, c);
-                if (d > 0) { // Point is to the right of the midpoint
-                    x++;
-                    d += A;
-                }
-                y--;
-                d -= B;
-            }
-        }
-    }
-
-    /**
-     * Draws a line between the points with given coordinates using the
-     * given color. Origin is at the center
-     * @param x0 x-coordinate of the starting point
-     * @param y0 y-coordinate of the starting point
-     * @param x1 x-coordinate of the ending point
-     * @param y1 y-coordinate of the ending point
-     * @param c color of the line to be drawn
-     */
-    public void drawLineCartesian(int x0, int y0, int x1, int y1, Color c) {
-        plotCartesian(x0, y0, c);
-        if (x0 > x1) { // Swap coordinates so our loop goes from left to right
-            int temp;
-            temp = x0;
-            x0 = x1;
-            x1 = temp;
-            temp = y0;
-            y0 = y1;
-            y1 = temp;
-        }
-        double slope = (double) (y1 - y0) / (double) (x1 - x0);
-        int x = x0;
-        int y = y0;
-        int A = 2 * (y1 - y0);
-        int B = -2 * (x1 - x0);
-        int d;
-        if (slope > 1) { // Line is above diagonal in Quadrant I
-            /** @formatter:off
-             * d0 = f(x0, y0) = A(x0) + B(x0) + C = 0
-             * d1 = f(x0+1/2, y0+1)
-             *    = A(x0) + 1/2A + B(x0) + B + C
-             *    = 0 + 1/2A + B
-             */
-            d = A / 2 + B;
-            while (y <= y1) {
-                plotCartesian(x, y, c);
-                if (d < 0) { // Point is to the right of the midpoint
-                    x++;
-                    d += A;
-                }
-                y++;
-                d += B;
-            }
-        }
-        else if (slope >= 0 && slope <= 1) { // Line is below diagonal in Quadrant I
-            /** @formatter:off
-             * d0 = f(x0, y0) = A(x0) + B(x0) + C = 0
-             * d1 = f(x0+1, y0+1/2)
-             *    = A(x0) + A + B(x0) + 1/2B + C
-             *    = 0 + A + 1/2B
-             */
-            d = A + B / 2;
-            while (x <= x1) {
-                plotCartesian(x, y, c);
-                if (d > 0) { // Point is above the midpoint
-                    y++;
-                    d += B;
-                }
-                x++;
-                d += A;
-            }
-        }
-        else if (slope >= -1 && slope <= 0) { // Line is above the diagonal in Quadrant IV
-            /** @formatter:off
-             * d0 = f(x0, y0) = A(x0) + B(x0) + C = 0
-             * d1 = f(x0+1, y0-1/2)
-             *    = A(x0) + A + B(x0) - 1/2B + C
-             *    = 0 + A - 1/2B
-             */
-            d = A - B / 2;
-            while (x <= x1) {
-                plotCartesian(x, y, c);
-                if (d < 0) { // Point is below the midpoint
-                    y--;
-                    d -= B;
-                }
-                x++;
-                d += A;
-            }
-        }
-        else if (slope < -1) { // Line is below the diagonal in Quadrant IV
-            /** @formatter:off
-             * d0 = f(x0, y0) = A(x0) + B(x0) + C = 0
-             * d1 = f(x0+1/2, y0-1)
-             *    = A(x0) + 1/2A + B(x0) - B + C
-             *    = 0 + 1/2A - B
-             */
-            d = A / 2 - B;
-            while (y >= y1) {
-                plotCartesian(x, y, c);
+                plot(x, y, z, c);
                 if (d > 0) { // Point is to the right of the midpoint
                     x++;
                     d += A;
