@@ -105,7 +105,41 @@ public class Frame {
                 double[] p2 = m.get(i + 2);
                 if (isVisible(p0, p1, p2)) {
                     //System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
-                    drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1], p1[2], c);
+		    
+		    /* Ambient Light Test
+		    double [] IA = {120, 140, 160};
+		    double [] KA = {.56, .16, .78};
+		    double [] light = flatAmbientLight(IA, KA);
+
+		    c.setRed((int)light[0]);
+		    c.setGreen((int)light[1]);
+		    c.setBlue((int)light[2]);
+		    */
+
+		    /* Flat Diffuse Light Test*/
+		    double [] Id = {120, 140, 160};
+		    double [] Kd = {.001, .002, .003};
+		    double [] l = {400, 200, 300};
+		    double [] light = flatDiffuseLight(p0, p1, p2, Id, Kd, l);
+		    
+		    if(light[0] >= 255){
+		    	c.setRed(255);
+		    }
+		    else
+			c.setRed((int)light[0]);
+		    if(light[1] >= 255){
+			c.setGreen(255);
+		    }
+		    else
+			c.setGreen((int)light[1]);
+		    if(light[2] >= 255){
+			c.setBlue(255);
+		    }
+		    else
+			c.setBlue((int)light[2]);
+			    
+			//System.out.println(c);
+		    drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1], p1[2], c);
                     drawLine((int) p1[0], (int) p1[1], p1[2], (int) p2[0], (int) p2[1], p2[2], c);
                     drawLine((int) p2[0], (int) p2[1], p2[2], (int) p0[0], (int) p0[1], p0[2], c);
                     scanlineConvert(p0, p1, p2, c);
@@ -175,6 +209,74 @@ public class Frame {
         }
     }
 
+    /**
+       Flat Ambient Lighting
+       Takes 3 parameters
+       Parameter 1 Ia Intensity of the ambient light
+       Parameter 2 Ka Ambient Constant
+              
+    **/
+    private double[] flatAmbientLight(double[] Ia, double[] Ka){
+		
+	double[] ambient = new double[3];
+	
+	ambient[0] = Ia[0] * Ka[0];
+	ambient[1] = Ia[1] * Ka[1];
+	ambient[2] = Ia[2] * Ka[2];
+	
+	return ambient;
+    }
+    /**
+       Diffuse Lighting
+       Takes 5 Parameters
+       Parameter 1-3: the three points of the polygon
+       Parameter 4: Id, Intensity of the diffuse light
+       Parameter 5: Kd, Diffuse Constant
+       Parameter 6: Light Vector
+    **/
+    private double[] flatDiffuseLight(double[] p0, double[] p1, double[] p2, double[] Id, double[] Kd, double[] L){
+
+	// v1 is the vector from p0 to p1
+        double[] v1 = new double[] { p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2] };
+        // v2 is the vector from p0 to p2
+        double[] v2 = new double[] { p0[0] - p2[0], p0[1] - p2[1], p0[2] - p2[2] };
+        double[] surfaceNormal = GMath.crossProduct(v1, v2);
+	
+	double normMag = GMath.getMagnitude(surfaceNormal);
+	//System.out.println(normMag);
+	double normLight = GMath.getMagnitude(L);
+	//System.out.println(normLight);
+	//Creating the Cos theta
+	double[] normVector = new double[3];
+	normVector[0] = surfaceNormal[0] / (normMag * normLight);
+	normVector[1] = surfaceNormal[1] / (normMag * normLight);
+	normVector[2] = surfaceNormal[2] / (normMag * normLight);
+	
+	double diffuseVector = GMath.dotProduct(L, normVector);
+	
+	double[] diffuseConstants = new double[3];
+	diffuseConstants[0] = Id[0] * Kd[0];
+	diffuseConstants[1] = Id[1] * Kd[1];
+	diffuseConstants[2] = Id[2] * Kd[2];
+
+	double[] diffuse = new double[3];
+	diffuse[0] = diffuseConstants[0] * diffuseVector;
+	diffuse[1] = diffuseConstants[1] * diffuseVector;
+	diffuse[2] = diffuseConstants[2] * diffuseVector;
+
+	System.out.println(diffuse[0]);
+	return diffuse;
+
+    }
+    //Combination of the 3 functions from above
+    
+    private double[] flatShading(double[] p0, double[] p1, double[] p2, double[] Ia, double[]ka, double[] Id, double[]Kd, double[]L){
+	
+	double[] light = new double[3];
+
+	return light;
+    }
+    
     /**
      * Returns true or false depending on whether the face is visible or not
      * when looking at the face from the front.
