@@ -216,6 +216,7 @@ public class Frame {
      * Flat Ambient Lighting given by the equation I = I_a*K_a
      * @param I_a intensity of the ambient light
      * @param K_a ambient constant
+     * @return ambient lighting values
      **/
     private double[] flatAmbientLight(double[] I_a, double[] K_a) {
         double[] ambient = new double[3];
@@ -234,6 +235,7 @@ public class Frame {
      * @param I_i intensity of the diffuse light
      * @param K_d diffuse constant
      * @param light vector corresponding to the light source
+     * @return diffuse lighting values
      **/
     private double[] flatDiffuseLight(double[] p0, double[] p1, double[] p2, double[] I_i,
             double[] K_d, double[] light) {
@@ -260,34 +262,70 @@ public class Frame {
         return diffuse;
     }
 
-    private double[] flatSpecLight(double[] p0, double[] p1, double[] p2, double[] I, double[] V){
-	
-	double[] light = new double[3];
-	//Getting the normal of the surface
-	// v1 is the vector from p0 to p1
+    /**
+     * Specular Lighting given by the equation I_i*K_s[(2N*(N•L)-L)•V]^n where L
+     * is
+     * the light vector, N is the surface normal, and V is the viewer vector.
+     * @param p0 first vertex of the polygon, going clockwise
+     * @param p1 second vertex of the polygon, going clockwise
+     * @param p2 third vertex of the polygon, going clockwise
+     * @param I_i intensity of the light source
+     * @param K_s specular constant
+     * @param light vector corresponding to the light source
+     * @param viewer vector corresponding to the viewer
+     * @return specular lighting values
+     **/
+    private double[] flatSpecularLight(double[] p0, double[] p1, double[] p2, double[] I_i,
+            double[] K_s, double[] light, double[] viewer) {
+        // Getting the normal of the surface
         double[] v1 = new double[] { p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2] };
-        // v2 is the vector from p0 to p2
         double[] v2 = new double[] { p0[0] - p2[0], p0[1] - p2[1], p0[2] - p2[2] };
         double[] surfaceNormal = GMath.crossProduct(v1, v2);
-	
-	
-	//Angle In  = Angle Out Somehow with a relationship to the norm
 
+        double n = 5; // This is a variable constant. A perfect reflector has n=Infinity
 
-	//Adjust ofr a small angle alpha which is the difference  between the viewing angle and the angle of the light reflected
-       
+        double dot = GMath.dotProduct(surfaceNormal, light);
+        double[] reflectVector = GMath.subtract(GMath.scale(surfaceNormal, dot * 2), light);
+        double specularVector = GMath.dotProduct(reflectVector, viewer);
+        specularVector = Math.pow(specularVector, n);
 
-	return light;
+        double[] specular = new double[3];
+        specular[0] = I_i[0] * K_s[0] * specularVector;
+        specular[1] = I_i[1] * K_s[1] * specularVector;
+        specular[2] = I_i[2] * K_s[2] * specularVector;
+
+        //System.out.println(Arrays.toString(specular));
+        return specular;
     }
 
-    //Combination of the 3 functions from above
-    private double[] flatShading(double[] p0, double[] p1, double[] p2, double[] Ia, double[] ka,
-            double[] Id, double[] Kd, double[] L) {
-
-        double[] light = new double[3];
+    /**
+     * Combination of the three lighting types (ambient, diffuse, specular) to
+     * form the Standard Computer Graphics Lighting Equation
+     * @param p0 first vertex of the polygon, going clockwise
+     * @param p1 second vertex of the polygon, going clockwise
+     * @param p2 third vertex of the polygon, going clockwise
+     * @param I_a intensity of the ambient light
+     * @param K_a ambient constant
+     * @param I_i intensity of the light source
+     * @param K_d diffuse constant
+     * @param K_s specular constant
+     * @param light vector corresponding to the light source
+     * @param viewer vector corresponding to the viewer
+     * @return combined lighting values
+     */
+    private double[] flatShading(double[] p0, double[] p1, double[] p2, double[] I_a, double[] K_a,
+            double[] I_i, double[] K_d, double[] K_s, double[] light, double[] viewer) {
+        double[] ambient = flatAmbientLight(I_a, K_a);
+        double[] diffuse = flatDiffuseLight(p0, p1, p2, I_i, K_d, light);
+        double[] specular = flatSpecularLight(p0, p1, p2, I_i, K_s, light, viewer);
 
         //I = Ia + Id + Is as long as they are less 255
-        return light;
+        double[] I = new double[3];
+        I[0] = ambient[0] + diffuse[0] + specular[0];
+        I[1] = ambient[1] + diffuse[1] + specular[1];
+        I[2] = ambient[2] + diffuse[2] + specular[2];
+
+        return I;
     }
 
     /**

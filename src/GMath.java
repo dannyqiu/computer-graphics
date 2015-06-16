@@ -51,6 +51,37 @@ public class GMath {
         }
         return sum;
     }
+
+    /**
+     * Returns a vector scaled by the given constant
+     * @param a vector to scale
+     * @param c constant to scale by
+     * @return double array with scaled values
+     */
+    public static double[] scale(double[] a, double c) {
+        double[] scaled = new double[a.length];
+        for (int i=0; i<a.length; i++) {
+            scaled[i] = a[i] * c;
+        }
+        return scaled;
+    }
+
+    /**
+     * Returns a vector difference of two vectors
+     * @param a vector to subtract from
+     * @param b vector to subtract
+     * @return double array with subtracted values given by a-b
+     */
+    public static double[] subtract(double[] a, double[] b) {
+        if (a.length != b.length) {
+            throw new UnequalVectorLengthsException();
+        }
+        double[] difference = new double[a.length];
+        for (int i=0; i<a.length; i++) {
+            difference[i] = a[i] - b[i];
+        }
+        return difference;
+    }
 }
 
 class UnequalVectorLengthsException extends RuntimeException {}
