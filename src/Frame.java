@@ -236,17 +236,20 @@ public class Frame {
     **/
     private double[] flatDiffuseLight(double[] p0, double[] p1, double[] p2, double[] Id, double[] Kd, double[] L){
 
+	//Finds the norm of the surface
+
 	// v1 is the vector from p0 to p1
         double[] v1 = new double[] { p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2] };
         // v2 is the vector from p0 to p2
         double[] v2 = new double[] { p0[0] - p2[0], p0[1] - p2[1], p0[2] - p2[2] };
         double[] surfaceNormal = GMath.crossProduct(v1, v2);
 	
+	//Create the cos
+
 	double normMag = GMath.getMagnitude(surfaceNormal);
 	//System.out.println(normMag);
 	double normLight = GMath.getMagnitude(L);
 	//System.out.println(normLight);
-	//Creating the Cos theta
 	double[] normVector = new double[3];
 	normVector[0] = surfaceNormal[0] / (normMag * normLight);
 	normVector[1] = surfaceNormal[1] / (normMag * normLight);
@@ -264,16 +267,42 @@ public class Frame {
 	diffuse[1] = diffuseConstants[1] * diffuseVector;
 	diffuse[2] = diffuseConstants[2] * diffuseVector;
 
-	System.out.println(diffuse[0]);
+	//System.out.println(diffuse[0]); Number ranges from 0 - 8
 	return diffuse;
 
     }
+
+    /**
+       Specular Light takes in the 3 points of the surface, the vector of the incident light and the vector of the viewer
+    **/
+
+
+    private double[] flatSpecLight(double[] p0, double[] p1, double[] p2, double[] I, double[] V){
+	
+	double[] light = new double[3];
+	//Getting the normal of the surface
+	// v1 is the vector from p0 to p1
+        double[] v1 = new double[] { p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2] };
+        // v2 is the vector from p0 to p2
+        double[] v2 = new double[] { p0[0] - p2[0], p0[1] - p2[1], p0[2] - p2[2] };
+        double[] surfaceNormal = GMath.crossProduct(v1, v2);
+	
+	
+	//Angle In  = Angle Out Somehow with a relationship to the norm
+
+
+	//Adjust ofr a small angle alpha which is the difference  between the viewing angle and the angle of the light reflected
+       
+
+	return light;
+    }
+
     //Combination of the 3 functions from above
-    
     private double[] flatShading(double[] p0, double[] p1, double[] p2, double[] Ia, double[]ka, double[] Id, double[]Kd, double[]L){
 	
 	double[] light = new double[3];
-
+	
+	//I = Ia + Id + Is as long as they are less 255
 	return light;
     }
     
