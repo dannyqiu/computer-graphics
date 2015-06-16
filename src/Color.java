@@ -45,7 +45,10 @@ public class Color {
     }
 
     public static Color doubletoColor(double[] values) {
-        return new Color((int) values[0], (int) values[1], (int) values[2]);
+        int r = (values[0] > 255) ? 255 : (int) values[0];
+        int g = (values[1] > 255) ? 255 : (int) values[1];
+        int b = (values[2] > 255) ? 255 : (int) values[2];
+        return new Color(r, g, b);
     }
 
     public String toString() {
