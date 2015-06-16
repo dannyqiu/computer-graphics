@@ -264,8 +264,7 @@ public class Frame {
 
     /**
      * Specular Lighting given by the equation I_i*K_s[(2N*(N•L)-L)•V]^n where L
-     * is
-     * the light vector, N is the surface normal, and V is the viewer vector.
+     * is the light vector, N is the surface normal, and V is the viewer vector.
      * @param p0 first vertex of the polygon, going clockwise
      * @param p1 second vertex of the polygon, going clockwise
      * @param p2 third vertex of the polygon, going clockwise
