@@ -20,28 +20,28 @@ public class Color {
         blue = _b;
     }
 
-    public int getRed(){
-	return red;
-    }
-    
-    public int getBlue(){
-	return blue;
+    public int getRed() {
+        return red;
     }
 
-    public int getGreen(){
-	return green;
+    public int getBlue() {
+        return blue;
     }
 
-    public void setRed(int r){
-	red = r;
+    public int getGreen() {
+        return green;
     }
-    
-    public void setBlue(int b){
-	blue = b;
+
+    public void setRed(int r) {
+        red = r;
     }
-    
-    public void setGreen(int g){
-	green = g;
+
+    public void setBlue(int b) {
+        blue = b;
+    }
+
+    public void setGreen(int g) {
+        green = g;
     }
 
     public String toString() {

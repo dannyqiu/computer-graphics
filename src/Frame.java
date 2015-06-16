@@ -105,41 +105,44 @@ public class Frame {
                 double[] p2 = m.get(i + 2);
                 if (isVisible(p0, p1, p2)) {
                     //System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
-		    
-		    /* Ambient Light Test
-		    double [] IA = {120, 140, 160};
-		    double [] KA = {.56, .16, .78};
-		    double [] light = flatAmbientLight(IA, KA);
 
-		    c.setRed((int)light[0]);
-		    c.setGreen((int)light[1]);
-		    c.setBlue((int)light[2]);
-		    */
+                    /* Ambient Light Test
+                    double [] IA = {120, 140, 160};
+                    double [] KA = {.56, .16, .78};
+                    double [] light = flatAmbientLight(IA, KA);
 
-		    /* Flat Diffuse Light Test*/
-		    double [] Id = {120, 140, 160};
-		    double [] Kd = {.001, .002, .003};
-		    double [] l = {400, 200, 300};
-		    double [] light = flatDiffuseLight(p0, p1, p2, Id, Kd, l);
-		    
-		    if(light[0] >= 255){
-		    	c.setRed(255);
-		    }
-		    else
-			c.setRed((int)light[0]);
-		    if(light[1] >= 255){
-			c.setGreen(255);
-		    }
-		    else
-			c.setGreen((int)light[1]);
-		    if(light[2] >= 255){
-			c.setBlue(255);
-		    }
-		    else
-			c.setBlue((int)light[2]);
-			    
-			//System.out.println(c);
-		    drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1], p1[2], c);
+                    c.setRed((int)light[0]);
+                    c.setGreen((int)light[1]);
+                    c.setBlue((int)light[2]);
+                    */
+
+                    /* Flat Diffuse Light Test*/
+                    double[] Id = { 120, 140, 160 };
+                    double[] Kd = { .001, .002, .003 };
+                    double[] l = { 400, 200, 300 };
+                    double[] light = flatDiffuseLight(p0, p1, p2, Id, Kd, l);
+
+                    if (light[0] >= 255) {
+                        c.setRed(255);
+                    }
+                    else {
+                        c.setRed((int) light[0]);
+                    }
+                    if (light[1] >= 255) {
+                        c.setGreen(255);
+                    }
+                    else {
+                        c.setGreen((int) light[1]);
+                    }
+                    if (light[2] >= 255) {
+                        c.setBlue(255);
+                    }
+                    else {
+                        c.setBlue((int) light[2]);
+                    }
+
+                    //System.out.println(c);
+                    drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1], p1[2], c);
                     drawLine((int) p1[0], (int) p1[1], p1[2], (int) p2[0], (int) p2[1], p2[2], c);
                     drawLine((int) p2[0], (int) p2[1], p2[2], (int) p0[0], (int) p0[1], p0[2], c);
                     scanlineConvert(p0, p1, p2, c);
@@ -195,7 +198,7 @@ public class Frame {
             drawLine((int) x0, y, z0, (int) x1, y, z1, c);
         }
         x1 = p1[0]; // Sets the start of the top half's end to the x-coor of
-                    // the middle point. This fixes a bug where the middle and
+                    // the middle point. This fixes a bug when the middle and
                     // bottom points have the same y-coor
         z1 = p1[2];
         // Draws the top half of the polygon
@@ -210,72 +213,52 @@ public class Frame {
     }
 
     /**
-       Flat Ambient Lighting
-       Takes 3 parameters
-       Parameter 1 Ia Intensity of the ambient light
-       Parameter 2 Ka Ambient Constant
-              
-    **/
-    private double[] flatAmbientLight(double[] Ia, double[] Ka){
-		
-	double[] ambient = new double[3];
-	
-	ambient[0] = Ia[0] * Ka[0];
-	ambient[1] = Ia[1] * Ka[1];
-	ambient[2] = Ia[2] * Ka[2];
-	
-	return ambient;
+     * Flat Ambient Lighting given by the equation I = I_a*K_a
+     * @param I_a intensity of the ambient light
+     * @param K_a ambient constant
+     **/
+    private double[] flatAmbientLight(double[] I_a, double[] K_a) {
+        double[] ambient = new double[3];
+        ambient[0] = I_a[0] * K_a[0];
+        ambient[1] = I_a[1] * K_a[1];
+        ambient[2] = I_a[2] * K_a[2];
+        return ambient;
     }
+
     /**
-       Diffuse Lighting
-       Takes 5 Parameters
-       Parameter 1-3: the three points of the polygon
-       Parameter 4: Id, Intensity of the diffuse light
-       Parameter 5: Kd, Diffuse Constant
-       Parameter 6: Light Vector
-    **/
-    private double[] flatDiffuseLight(double[] p0, double[] p1, double[] p2, double[] Id, double[] Kd, double[] L){
-
-	//Finds the norm of the surface
-
-	// v1 is the vector from p0 to p1
+     * Diffuse Lighting given be the equation, I_d = I_i*K_d(L•N), where L is
+     * the light vector and N is the surface normal
+     * @param p0 first vertex of the polygon, going clockwise
+     * @param p1 second vertex of the polygon, going clockwise
+     * @param p2 third vertex of the polygon, going clockwise
+     * @param I_i intensity of the diffuse light
+     * @param K_d diffuse constant
+     * @param light vector corresponding to the light source
+     **/
+    private double[] flatDiffuseLight(double[] p0, double[] p1, double[] p2, double[] I_i,
+            double[] K_d, double[] light) {
+        // Getting the normal of the surface
         double[] v1 = new double[] { p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2] };
-        // v2 is the vector from p0 to p2
         double[] v2 = new double[] { p0[0] - p2[0], p0[1] - p2[1], p0[2] - p2[2] };
         double[] surfaceNormal = GMath.crossProduct(v1, v2);
-	
-	//Create the cos
 
-	double normMag = GMath.getMagnitude(surfaceNormal);
-	//System.out.println(normMag);
-	double normLight = GMath.getMagnitude(L);
-	//System.out.println(normLight);
-	double[] normVector = new double[3];
-	normVector[0] = surfaceNormal[0] / (normMag * normLight);
-	normVector[1] = surfaceNormal[1] / (normMag * normLight);
-	normVector[2] = surfaceNormal[2] / (normMag * normLight);
-	
-	double diffuseVector = GMath.dotProduct(L, normVector);
-	
-	double[] diffuseConstants = new double[3];
-	diffuseConstants[0] = Id[0] * Kd[0];
-	diffuseConstants[1] = Id[1] * Kd[1];
-	diffuseConstants[2] = Id[2] * Kd[2];
+        double normMag = GMath.getMagnitude(surfaceNormal);
+        double normLight = GMath.getMagnitude(light);
+        double[] normVector = new double[3];
+        normVector[0] = surfaceNormal[0] / (normMag * normLight);
+        normVector[1] = surfaceNormal[1] / (normMag * normLight);
+        normVector[2] = surfaceNormal[2] / (normMag * normLight);
 
-	double[] diffuse = new double[3];
-	diffuse[0] = diffuseConstants[0] * diffuseVector;
-	diffuse[1] = diffuseConstants[1] * diffuseVector;
-	diffuse[2] = diffuseConstants[2] * diffuseVector;
+        double diffuseVector = GMath.dotProduct(light, normVector);
 
-	//System.out.println(diffuse[0]); Number ranges from 0 - 8
-	return diffuse;
+        double[] diffuse = new double[3];
+        diffuse[0] = I_i[0] * K_d[0] * diffuseVector;
+        diffuse[1] = I_i[1] * K_d[1] * diffuseVector;
+        diffuse[2] = I_i[2] * K_d[2] * diffuseVector;
 
+        //System.out.println(Arrays.toString(diffuse));
+        return diffuse;
     }
-
-    /**
-       Specular Light takes in the 3 points of the surface, the vector of the incident light and the vector of the viewer
-    **/
-
 
     private double[] flatSpecLight(double[] p0, double[] p1, double[] p2, double[] I, double[] V){
 	
@@ -298,14 +281,15 @@ public class Frame {
     }
 
     //Combination of the 3 functions from above
-    private double[] flatShading(double[] p0, double[] p1, double[] p2, double[] Ia, double[]ka, double[] Id, double[]Kd, double[]L){
-	
-	double[] light = new double[3];
-	
-	//I = Ia + Id + Is as long as they are less 255
-	return light;
+    private double[] flatShading(double[] p0, double[] p1, double[] p2, double[] Ia, double[] ka,
+            double[] Id, double[] Kd, double[] L) {
+
+        double[] light = new double[3];
+
+        //I = Ia + Id + Is as long as they are less 255
+        return light;
     }
-    
+
     /**
      * Returns true or false depending on whether the face is visible or not
      * when looking at the face from the front.
