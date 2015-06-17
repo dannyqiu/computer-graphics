@@ -141,10 +141,10 @@ public class MdlReader {
         if (isAnimation) {
             if (numFrames == 0) {
                 throw new ParseException(
-                        "You must specify the number of frames for your animation.");
+                        "ERROR: You must specify the number of frames for your animation.");
             }
             if (basename.length() == 0) {
-                throw new ParseException("You must specify the basename for your animation.");
+                throw new ParseException("ERROR: You must specify the basename for your animation.");
             }
             i = opcodes.iterator();
             while (i.hasNext()) {
@@ -161,11 +161,11 @@ public class MdlReader {
                     double change = (endVal - startVal) / (end - start + 1);
                     if (start < 0) {
                         throw new ParseException(
-                                "The starting frame for knob '" + ((opVary) oc).getKnob() + "' must be at least 0.");
+                                "ERROR: The starting frame for knob '" + ((opVary) oc).getKnob() + "' must be at least 0.");
                     }
                     if (end >= numFrames) {
                         throw new ParseException(
-                                "The end frame for knob '" + ((opVary) oc).getKnob() + "' must be less than the number of frames (" + numFrames + ").");
+                                "ERROR: The end frame for knob '" + ((opVary) oc).getKnob() + "' must be less than the number of frames (" + numFrames + ").");
                     }
                     for (int f = start; f <= end; f++) {
                         startVal += change;
@@ -210,12 +210,12 @@ public class MdlReader {
                         Double[] knobValues = knobs.get(((opMove) oc).getKnob());
                         if (knobValues == null) {
                             throw new ParseException(
-                                    "You attempted to use knob '" + ((opMove) oc).getKnob() + "' without defining it.");
+                                    "ERROR: You attempted to use knob '" + ((opMove) oc).getKnob() + "' without defining it.");
                         }
                         Double knobValue = knobValues[f];
                         if (knobValue == null) {
                             throw new ParseException(
-                                    "The knob '" + ((opMove) oc).getKnob() + "' is not defined for frame " + f);
+                                    "ERROR: The knob '" + ((opMove) oc).getKnob() + "' is not defined for frame " + f);
                         }
                         x *= knobValue;
                         y *= knobValue;
@@ -232,12 +232,12 @@ public class MdlReader {
                         Double[] knobValues = knobs.get(((opScale) oc).getKnob());
                         if (knobValues == null) {
                             throw new ParseException(
-                                    "You attempted to use knob '" + ((opScale) oc).getKnob() + "' without defining it.");
+                                    "ERROR: You attempted to use knob '" + ((opScale) oc).getKnob() + "' without defining it.");
                         }
                         Double knobValue = knobValues[f];
                         if (knobValue == null) {
                             throw new ParseException(
-                                    "The knob '" + ((opScale) oc).getKnob() + "' is not defined for frame " + f);
+                                    "ERROR: The knob '" + ((opScale) oc).getKnob() + "' is not defined for frame " + f);
                         }
                         x *= knobValue;
                         y *= knobValue;
@@ -254,12 +254,12 @@ public class MdlReader {
                         Double[] knobValues = knobs.get(((opRotate) oc).getKnob());
                         if (knobValues == null) {
                             throw new ParseException(
-                                    "You attempted to use knob '" + ((opRotate) oc).getKnob() + "' without defining it.");
+                                    "ERROR: You attempted to use knob '" + ((opRotate) oc).getKnob() + "' without defining it.");
                         }
                         Double knobValue = knobValues[f];
                         if (knobValue == null) {
                             throw new ParseException(
-                                    "The knob '" + ((opRotate) oc).getKnob() + "' is not defined for frame " + f);
+                                    "ERROR: The knob '" + ((opRotate) oc).getKnob() + "' is not defined for frame " + f);
                         }
                         degrees *= knobValue;
                     }
