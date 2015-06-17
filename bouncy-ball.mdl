@@ -4,8 +4,8 @@ push
 move 290 370 0
 rotate x 10
 rotate y -5
-box 0 0 -30 150 10 100
-sphere 70 45 0 30
+box lightson 0 0 -30 150 10 100
+sphere lightson 70 45 0 30
 pop
 push
 move 0 500 0
@@ -14,7 +14,7 @@ move 0 1 0 vmotion
 rotate x 180 spinny
 rotate y 360 spinny
 rotate z 270 spinny
-sphere 0 0 0 30
+sphere lightson 0 0 0 30
 vary hmotion 0 129 -34 534
 vary vmotion 0 19 0 -470
 vary vmotion 20 35 -470 -200
@@ -34,3 +34,7 @@ vary vmotion 117 117 -460 -470
 vary vmotion 118 129 -470 -470
 vary spinny 0 129 0 5
 pop
+// Lighting
+ambient 0 0 0
+light danny 255 255 255 1 0 1
+constants lightson 1 1 1 1 1 1 1 1 1 0 174 239

@@ -57,8 +57,8 @@ public class MdlReader {
     double[] ambientLighting;
 
     Hashtable<String, Double[]> knobs = new Hashtable<String, Double[]>();
-    Hashtable<String, Double[][]> lights = new Hashtable<String, Double[][]>();
-    Hashtable<String, Double[][]> lightingConstants = new Hashtable<String, Double[][]>();
+    Hashtable<String, double[]> lights = new Hashtable<String, double[]>();
+    Hashtable<String, double[][]> lightingConstants = new Hashtable<String, double[][]>();
 
     public MdlReader(ArrayList<opCode> o, SymTab s) {
         opcodes = o;
@@ -199,33 +199,19 @@ public class MdlReader {
                     throw new ParseException(
                             "ERROR: Light " + opL.getName() + " is already defined!");
                 }
-                Double[][] light = new Double[2][3]; // RGB, Location
-                for (int c = 0; c < opL.getRgb().length; c++) {
-                    light[0][c] = opL.getRgb()[c];
-                }
-                for (int c = 0; c < opL.getLocation().length; c++) {
-                    light[1][c] = opL.getLocation()[c];
-                }
+                lights.put(opL.getName(), opL.getLocation());
             }
             else if (oc instanceof opConstants) {
                 opConstants opC = ((opConstants) oc);
                 if (lightingConstants.containsKey(opC.getName())) {
                     System.out.println("WARNING: You are modifying the " + opC.getName() + "lighting constants multiple times");
                 }
-                Double[][] constants = new Double[4][3]; // Ambient, Diffuse, Specular, RGB
-                for (int c = 0; c < opC.getAmbient().length; c++) {
-                    constants[0][c] = opC.getAmbient()[c];
-                }
-                for (int c = 0; c < opC.getDiffuse().length; c++) {
-                    constants[1][c] = opC.getDiffuse()[c];
-                }
-                for (int c = 0; c < opC.getSpecular().length; c++) {
-                    constants[2][c] = opC.getSpecular()[c];
-                }
-                for (int c = 0; c < opC.getIntensities().length; c++) {
-                    constants[3][c] = opC.getIntensities()[c];
-                }
-                lightingConstants.put(opC.getName(), (Double[][]) constants);
+                double[][] constants = new double[4][3]; // Ambient, Diffuse, Specular, RGB
+                constants[0] = opC.getAmbient();
+                constants[1] = opC.getDiffuse();
+                constants[2] = opC.getSpecular();
+                constants[3] = opC.getIntensities();
+                lightingConstants.put(opC.getName(), constants);
             }
             else if (oc instanceof opAmbient) {
                 opAmbient opA = ((opAmbient) oc);
@@ -332,31 +318,52 @@ public class MdlReader {
                     origins.peek().matrixMultiply(temp);
                 }
                 else if (oc instanceof opBox) {
-                    double loc[] = ((opBox) oc).getP1();
+                    opBox opB = (opBox) oc;
+                    double loc[] = opB.getP1();
                     double x = loc[0], y = loc[1], z = loc[2];
-                    double dim[] = ((opBox) oc).getP2();
+                    double dim[] = opB.getP2();
                     double l = dim[0], h = dim[1], d = dim[2];
                     tmp.addPrism(x, y, z, l, h, d);
                     tmp.matrixMultiply(origins.peek().transpose());
-                    frame.drawPolygons(tmp, new Color());
+                    if (opB.getConstants() == null) {
+                        frame.drawPolygons(tmp, new Color());
+                    }
+                    else {
+                        double[][] constants = lightingConstants.get(opB.getConstants());
+                        frame.drawShadedPolygons(tmp, ambientLighting, constants, lights.values());
+                    }
                     tmp.clear();
                 }
                 else if (oc instanceof opSphere) {
-                    double center[] = ((opSphere) oc).getCenter();
+                    opSphere opS = (opSphere) oc;
+                    double center[] = opS.getCenter();
                     double cx = center[0], cy = center[1], cz = center[2];
-                    double r = ((opSphere) oc).getR();
+                    double r = opS.getR();
                     tmp.addSphere(cx, cy, cz, r);
                     tmp.matrixMultiply(origins.peek().transpose());
-                    frame.drawPolygons(tmp, new Color());
+                    if (opS.getConstants() == null) {
+                        frame.drawPolygons(tmp, new Color());
+                    }
+                    else {
+                        double[][] constants = lightingConstants.get(opS.getConstants());
+                        frame.drawShadedPolygons(tmp, ambientLighting, constants, lights.values());
+                    }
                     tmp.clear();
                 }
                 else if (oc instanceof opTorus) {
-                    double center[] = ((opTorus) oc).getCenter();
+                    opTorus opT = (opTorus) oc;
+                    double center[] = opT.getCenter();
                     double cx = center[0], cy = center[1], cz = center[2];
-                    double R = ((opTorus) oc).getR(), r = ((opTorus) oc).getr();
+                    double R = opT.getR(), r = opT.getr();
                     tmp.addTorus(cx, cy, cz, R, r);
                     tmp.matrixMultiply(origins.peek().transpose());
-                    frame.drawPolygons(tmp, new Color());
+                    if (opT.getConstants() == null) {
+                        frame.drawPolygons(tmp, new Color());
+                    }
+                    else {
+                        double[][] constants = lightingConstants.get(opT.getConstants());
+                        frame.drawShadedPolygons(tmp, ambientLighting, constants, lights.values());
+                    }
                     tmp.clear();
                 }
                 else if (oc instanceof opLine) {

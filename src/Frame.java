@@ -133,6 +133,42 @@ public class Frame {
                     drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1], p1[2], c);
                     drawLine((int) p1[0], (int) p1[1], p1[2], (int) p2[0], (int) p2[1], p2[2], c);
                     drawLine((int) p2[0], (int) p2[1], p2[2], (int) p0[0], (int) p0[1], p0[2], c);
+                    //scanlineConvert(p0, p1, p2, c);
+                }
+            }
+        }
+    }
+
+    public void drawShadedPolygons(Matrix matrix, double[] ambient, double[][] constants,
+            Collection<double[]> lightSources) {
+        ArrayList<double[]> m = matrix.getMatrix();
+        if (matrix.getRows() >= 3) {
+            for (int i = 0; i < matrix.getRows() - 2; i += 3) {
+                double[] p0 = m.get(i);
+                double[] p1 = m.get(i + 1);
+                double[] p2 = m.get(i + 2);
+                if (isVisible(p0, p1, p2)) {
+                    //System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
+                    double[] I_a = ambient;
+                    double[] K_a = constants[0];
+                    double[] I_i = constants[3];
+                    double[] K_d = constants[1];
+                    double[] K_s = constants[2];
+
+                    double[][] lights = new double[lightSources.size()][3];
+                    int l = 0;
+                    for (double[] light : lightSources) {
+                        lights[l] = light;
+                        l++;
+                    }
+                    double[] view = { 0, 0, 1 };
+
+                    double[] color = flatShading(p0, p1, p2, I_a, K_a, I_i, K_d, K_s, lights, view);
+                    Color c = Color.doubleToColor(color);
+
+                    drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1], p1[2], c);
+                    drawLine((int) p1[0], (int) p1[1], p1[2], (int) p2[0], (int) p2[1], p2[2], c);
+                    drawLine((int) p2[0], (int) p2[1], p2[2], (int) p0[0], (int) p0[1], p0[2], c);
                     scanlineConvert(p0, p1, p2, c);
                 }
             }
@@ -241,6 +277,12 @@ public class Frame {
         diffuse[1] = I_i[1] * K_d[1] * diffuseVector;
         diffuse[2] = I_i[2] * K_d[2] * diffuseVector;
 
+        for (int i = 0; i < diffuse.length; i++) {
+            if (diffuse[i] < 0) {
+                diffuse[i] = 0;
+            }
+        }
+
         //System.out.println(Arrays.toString(diffuse));
         return diffuse;
     }
@@ -278,6 +320,12 @@ public class Frame {
         specular[1] = I_i[1] * K_s[1] * specularVector;
         specular[2] = I_i[2] * K_s[2] * specularVector;
 
+        for (int i = 0; i < specular.length; i++) {
+            if (specular[i] < 0) {
+                specular[i] = 0;
+            }
+        }
+
         //System.out.println(Arrays.toString(specular));
         return specular;
     }
@@ -293,22 +341,30 @@ public class Frame {
      * @param I_i intensity of the light source
      * @param K_d diffuse constant
      * @param K_s specular constant
-     * @param light vector corresponding to the light source
+     * @param lights vectors corresponding to the light sources
      * @param viewer vector corresponding to the viewer
      * @return combined lighting values
      */
     private double[] flatShading(double[] p0, double[] p1, double[] p2, double[] I_a, double[] K_a,
-            double[] I_i, double[] K_d, double[] K_s, double[] light, double[] viewer) {
-        double[] ambient = flatAmbientLight(I_a, K_a);
-        double[] diffuse = flatDiffuseLight(p0, p1, p2, I_i, K_d, light);
-        double[] specular = flatSpecularLight(p0, p1, p2, I_i, K_s, light, viewer);
-
-        //I = Ia + Id + Is as long as they are less 255
+            double[] I_i, double[] K_d, double[] K_s, double[][] lights, double[] viewer) {
+        // I = Ia + Id + Is
         double[] I = new double[3];
-        I[0] = ambient[0] + diffuse[0] + specular[0];
-        I[1] = ambient[1] + diffuse[1] + specular[1];
-        I[2] = ambient[2] + diffuse[2] + specular[2];
-
+        double[] ambient = flatAmbientLight(I_a, K_a);
+        for (int a = 0; a < ambient.length; a++) {
+            I[a] += ambient[a];
+        }
+        for (int i = 0; i < lights.length; i++) {
+            double[] diffuse = flatDiffuseLight(p0, p1, p2, I_i, K_d, lights[i]);
+            for (int d = 0; d < diffuse.length; d++) {
+                I[d] += diffuse[d];
+            }
+        }
+        for (int i = 0; i < lights.length; i++) {
+            double[] specular = flatSpecularLight(p0, p1, p2, I_i, K_s, lights[i], viewer);
+            for (int s = 0; s < specular.length; s++) {
+                I[s] += specular[s];
+            }
+        }
         return I;
     }
 
