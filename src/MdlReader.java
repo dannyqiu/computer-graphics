@@ -54,7 +54,11 @@ public class MdlReader {
     int numFrames = 0;
     String basename = "";
     String formatString;
+    double[] ambientLighting;
+
     Hashtable<String, Double[]> knobs = new Hashtable<String, Double[]>();
+    Hashtable<String, Double[][]> lights = new Hashtable<String, Double[][]>();
+    Hashtable<String, Double[][]> lightingConstants = new Hashtable<String, Double[][]>();
 
     public MdlReader(ArrayList<opCode> o, SymTab s) {
         opcodes = o;
@@ -184,11 +188,61 @@ public class MdlReader {
         }
     }
 
+    public void lightingPass() throws ParseException {
+        Iterator<opCode> i = opcodes.iterator();
+        opCode oc;
+        while (i.hasNext()) {
+            oc = (opCode) i.next();
+            if (oc instanceof opLight) {
+                opLight opL = ((opLight) oc);
+                if (lights.containsKey(opL.getName())) {
+                    throw new ParseException(
+                            "ERROR: Light " + opL.getName() + " is already defined!");
+                }
+                Double[][] light = new Double[2][3]; // RGB, Location
+                for (int c = 0; c < opL.getRgb().length; c++) {
+                    light[0][c] = opL.getRgb()[c];
+                }
+                for (int c = 0; c < opL.getLocation().length; c++) {
+                    light[1][c] = opL.getLocation()[c];
+                }
+            }
+            else if (oc instanceof opConstants) {
+                opConstants opC = ((opConstants) oc);
+                if (lightingConstants.containsKey(opC.getName())) {
+                    System.out.println("WARNING: You are modifying the " + opC.getName() + "lighting constants multiple times");
+                }
+                Double[][] constants = new Double[4][3]; // Ambient, Diffuse, Specular, RGB
+                for (int c = 0; c < opC.getAmbient().length; c++) {
+                    constants[0][c] = opC.getAmbient()[c];
+                }
+                for (int c = 0; c < opC.getDiffuse().length; c++) {
+                    constants[1][c] = opC.getDiffuse()[c];
+                }
+                for (int c = 0; c < opC.getSpecular().length; c++) {
+                    constants[2][c] = opC.getSpecular()[c];
+                }
+                for (int c = 0; c < opC.getIntensities().length; c++) {
+                    constants[3][c] = opC.getIntensities()[c];
+                }
+                lightingConstants.put(opC.getName(), (Double[][]) constants);
+            }
+            else if (oc instanceof opAmbient) {
+                opAmbient opA = ((opAmbient) oc);
+                if (ambientLighting != null) {
+                    System.out.println("WARNING: Ambient Lighting is defined twice.");
+                }
+                ambientLighting = opA.getRgb();
+            }
+        }
+    }
+
     /**
      * Processes the opcodes parsed from the MdlParser and runs the specific
      * commands. Documentation can be found in the Mdl.spec file
      */
     public void process() throws ParseException {
+        lightingPass();
         animationPass();
         for (int f = 0; f < numFrames; f++) {
             Iterator<opCode> i = opcodes.iterator();
