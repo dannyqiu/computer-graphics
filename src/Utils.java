@@ -26,4 +26,17 @@ public class Utils {
         return (directory.delete());
     }
 
+    public static double[] hexToRGB(String hexValue) {
+        if (hexValue.length() != 7) {
+            throw new BadHexValue();
+        }
+        double[] rgb = new double[3];
+        rgb[0] = Integer.valueOf(hexValue.substring(1, 3), 16);
+        rgb[1] = Integer.valueOf(hexValue.substring(3, 5), 16);
+        rgb[2] = Integer.valueOf(hexValue.substring(5, 7), 16);
+        return rgb;
+    }
+
 }
+
+class BadHexValue extends RuntimeException {}
