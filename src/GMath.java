@@ -49,7 +49,7 @@ public class GMath {
         for (int i = 0; i < a.length; i++) {
             sum += a[i] * a[i];
         }
-        return sum;
+        return Math.sqrt(sum);
     }
 
     /**
@@ -60,7 +60,7 @@ public class GMath {
      */
     public static double[] scale(double[] a, double c) {
         double[] scaled = new double[a.length];
-        for (int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             scaled[i] = a[i] * c;
         }
         return scaled;
@@ -77,7 +77,7 @@ public class GMath {
             throw new UnequalVectorLengthsException();
         }
         double[] difference = new double[a.length];
-        for (int i=0; i<a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             difference[i] = a[i] - b[i];
         }
         return difference;
