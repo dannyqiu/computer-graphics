@@ -45,10 +45,23 @@ public class Color {
     }
 
     public static Color doubletoColor(double[] values) {
-        int r = (values[0] > 255) ? 255 : (int) values[0];
-        int g = (values[1] > 255) ? 255 : (int) values[1];
-        int b = (values[2] > 255) ? 255 : (int) values[2];
+        int r = bound((int) values[0]);
+        int g = bound((int) values[1]);
+        int b = bound((int) values[2]);
         return new Color(r, g, b);
+    }
+
+    int BOUND_MIN = 0;
+    int BOUND_MAX = 255;
+
+    private static int bound(int value) {
+        if (value > 255) {
+            value = 255;
+        }
+        else if (value < 0) {
+            value = 0;
+        }
+        return value;
     }
 
     public String toString() {
