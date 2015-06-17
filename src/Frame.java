@@ -107,41 +107,29 @@ public class Frame {
                     //System.out.println("Drawing Polygon..." + Arrays.toString(p0) + " to " + Arrays.toString(p1) + " to " + Arrays.toString(p2));
 
                     /* Ambient Light Test
-                    double [] IA = {120, 140, 160};
-                    double [] KA = {.56, .16, .78};
-                    double [] light = flatAmbientLight(IA, KA);
-
-                    c.setRed((int)light[0]);
-                    c.setGreen((int)light[1]);
-                    c.setBlue((int)light[2]);
+                    double[] I_a = { 0, 174, 239 };
+                    double[] K_a = { .56, .16, .78 };
+                    double[] color = flatAmbientLight(I_a, K_a);
+                    c = Color.doubleToColor(color);
                     */
 
-                    /* Flat Diffuse Light Test*/
-                    double[] Id = { 120, 140, 160 };
-                    double[] Kd = { .001, .002, .003 };
-                    double[] l = { 400, 200, 300 };
-                    double[] light = flatDiffuseLight(p0, p1, p2, Id, Kd, l);
+                    /* Flat Diffuse Light Test
+                    double[] I_i = { 0, 174, 239 };
+                    double[] K_d = { 1.0, 1.0, 1.0 };
+                    double[] light = { 1, 1, 1 };
+                    double[] color = flatDiffuseLight(p0, p1, p2, I_i, K_d, light);
+                    c = Color.doubleToColor(color);
+                    */
 
-                    if (light[0] >= 255) {
-                        c.setRed(255);
-                    }
-                    else {
-                        c.setRed((int) light[0]);
-                    }
-                    if (light[1] >= 255) {
-                        c.setGreen(255);
-                    }
-                    else {
-                        c.setGreen((int) light[1]);
-                    }
-                    if (light[2] >= 255) {
-                        c.setBlue(255);
-                    }
-                    else {
-                        c.setBlue((int) light[2]);
-                    }
+                    /* Flat Specular Light Test
+                    double[] I_i = Utils.hexToRGB("#00aeef");
+                    double[] K_s = { 1.0, 1.0, 1.0 };
+                    double[] light = { 1, 1, 1 };
+                    double[] viewer = { 0, 0, 1 };
+                    double[] color = flatSpecularLight(p0, p1, p2, I_i, K_s, light, viewer);
+                    c = Color.doubleToColor(color);
+                    */
 
-                    //System.out.println(c);
                     drawLine((int) p0[0], (int) p0[1], p0[2], (int) p1[0], (int) p1[1], p1[2], c);
                     drawLine((int) p1[0], (int) p1[1], p1[2], (int) p2[0], (int) p2[1], p2[2], c);
                     drawLine((int) p2[0], (int) p2[1], p2[2], (int) p0[0], (int) p0[1], p0[2], c);
@@ -244,14 +232,9 @@ public class Frame {
         double[] v2 = new double[] { p0[0] - p2[0], p0[1] - p2[1], p0[2] - p2[2] };
         double[] surfaceNormal = GMath.crossProduct(v1, v2);
 
-        double normMag = GMath.getMagnitude(surfaceNormal);
-        double normLight = GMath.getMagnitude(light);
-        double[] normVector = new double[3];
-        normVector[0] = surfaceNormal[0] / (normMag * normLight);
-        normVector[1] = surfaceNormal[1] / (normMag * normLight);
-        normVector[2] = surfaceNormal[2] / (normMag * normLight);
-
-        double diffuseVector = GMath.dotProduct(light, normVector);
+        light = GMath.normalize(light);
+        surfaceNormal = GMath.normalize(surfaceNormal);
+        double diffuseVector = GMath.dotProduct(light, surfaceNormal);
 
         double[] diffuse = new double[3];
         diffuse[0] = I_i[0] * K_d[0] * diffuseVector;
@@ -281,9 +264,11 @@ public class Frame {
         double[] v2 = new double[] { p0[0] - p2[0], p0[1] - p2[1], p0[2] - p2[2] };
         double[] surfaceNormal = GMath.crossProduct(v1, v2);
 
-        double n = 5; // This is a variable constant. A perfect reflector has n=Infinity
+        double n = 1; // This is a variable constant. A perfect reflector has n=Infinity
 
-        double dot = GMath.dotProduct(surfaceNormal, light);
+        light = GMath.normalize(light);
+        surfaceNormal = GMath.normalize(surfaceNormal);
+        double dot = GMath.dotProduct(light, surfaceNormal);
         double[] reflectVector = GMath.subtract(GMath.scale(surfaceNormal, dot * 2), light);
         double specularVector = GMath.dotProduct(reflectVector, viewer);
         specularVector = Math.pow(specularVector, n);

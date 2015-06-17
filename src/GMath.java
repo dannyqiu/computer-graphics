@@ -53,6 +53,20 @@ public class GMath {
     }
 
     /**
+     * Normalizes the given vector to a unit vector
+     * @param a vector to normalize
+     * @return normalized vector
+     */
+    public static double[] normalize(double[] a) {
+        double[] unit = new double[a.length];
+        double mag = getMagnitude(a);
+        for (int i = 0; i < a.length; i++) {
+            unit[i] = a[i] / mag;
+        }
+        return unit;
+    }
+
+    /**
      * Returns a vector scaled by the given constant
      * @param a vector to scale
      * @param c constant to scale by

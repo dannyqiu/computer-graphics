@@ -44,7 +44,7 @@ public class Color {
         green = g;
     }
 
-    public static Color doubletoColor(double[] values) {
+    public static Color doubleToColor(double[] values) {
         int r = bound((int) values[0]);
         int g = bound((int) values[1]);
         int b = bound((int) values[2]);
